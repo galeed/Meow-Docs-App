@@ -368,72 +368,54 @@
       text-transform: uppercase;
     }
 
-    /* BARRA INFERIOR FIJA */
+    /* BARRA INFERIOR ULTRA REDUCIDA */
     .bottom-grid {
       border-top: 1px solid var(--border);
       display: flex;
-      flex-direction: column;
+      align-items: stretch;
       flex-shrink: 0;
       transition: border-color 0.3s ease;
     }
 
-    .toolbar-tools {
+    .toolbar-tools-compact {
       display: flex;
-      flex-direction: column;
-      width: 100%;
+      flex: 1;
+      overflow-x: auto;
     }
 
-    .tool-row {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      transition: border-color 0.3s ease;
-    }
-
-    .tool-num {
-      width: 32px;
-      font-size: 9px;
-      color: var(--muted-num);
-      padding: 8px 4px;
-      border-right: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: border-color 0.3s ease;
-      flex-shrink: 0;
-    }
-
-    .tool-btn {
+    .tool-btn-compact {
       background: transparent;
       color: var(--text);
       border: none;
-      padding: 8px 10px;
-      font-size: 9px;
+      border-right: 1px solid var(--border);
+      padding: 12px 14px;
+      font-size: 10px;
       letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
-      text-align: center;
-      flex: 1;
+      white-space: nowrap;
       transition: background 0.2s ease;
     }
 
-    .tool-btn:hover {
+    .tool-btn-compact:hover {
       background: var(--hover-tool);
     }
 
     /* MENÚ EXPORTAR */
     .export-wrapper {
       position: relative;
-      width: 100%;
+      width: 130px;
     }
 
     .btn-export-trigger {
       width: 100%;
+      height: 100%;
       background: var(--export-primary-bg);
       color: var(--export-primary-text);
       border: none;
       padding: 12px 0;
       font-family: 'Oswald', sans-serif;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -448,11 +430,10 @@
       display: none;
       position: absolute;
       bottom: 100%;
-      left: 0;
-      width: 100%;
+      right: 0;
+      width: 180px;
       background: var(--app-bg);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
+      border: 1px solid var(--border);
       z-index: 10;
       flex-direction: column;
     }
@@ -468,7 +449,7 @@
       border-bottom: 1px solid var(--border);
       padding: 10px;
       font-family: 'Oswald', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       cursor: pointer;
@@ -477,20 +458,6 @@
 
     .export-option:last-child {
       border-bottom: none;
-    }
-
-    @media (min-width: 600px) {
-      body { padding: 12px; }
-      .brand-title { font-size: 22px; }
-      header { grid-template-columns: 48px 1fr 48px 90px; }
-      .sidebar-text { width: 32px; }
-      .sidebar-text span { font-size: 9px; }
-      .editor-wrapper { padding: 30px 24px; }
-      .doc-title { font-size: 32px; }
-      .bottom-grid { display: grid; grid-template-columns: 1fr auto; }
-      .toolbar-tools { width: auto; }
-      .export-wrapper { width: 160px; border-left: 1px solid var(--border); }
-      .btn-export-trigger { height: 100%; }
     }
   </style>
 </head>
@@ -512,46 +479,42 @@
       <button class="drawer-item" onclick="copyToClipboard()">Copiar Texto Plano</button>
       <button class="drawer-item" onclick="clearEditor()">Vaciar Lienzo</button>
 
-      <!-- 2. PRODUCCIÓN Y HERRAMIENTAS -->
-      <div class="drawer-section-title">02. Producción y Herramientas</div>
+      <!-- 2. FORMATO DE TEXTO -->
+      <div class="drawer-section-title">02. Formato Rápido</div>
+      <div class="drawer-row">
+        <button class="drawer-item" onclick="execCmd('bold')">Negrita</button>
+        <button class="drawer-item" onclick="execCmd('italic')">Cursiva</button>
+      </div>
+      <div class="drawer-row">
+        <button class="drawer-item" onclick="execCmd('underline')">Subrayado</button>
+        <button class="drawer-item" onclick="execCmd('formatBlock', 'H2')">Encabezado</button>
+      </div>
+
+      <!-- 3. PRODUCCIÓN Y HERRAMIENTAS -->
+      <div class="drawer-section-title">03. Herramientas Avanzadas</div>
       <button class="drawer-item" onclick="toggleZenMode()">Modo Zen (Pantalla Limpia)</button>
       <button class="drawer-item" onclick="toggleSearchBar()">Buscar y Reemplazar</button>
-      <button class="drawer-item" onclick="startSpeechRecognition()">Dictado por Voz (Micrófono)</button>
+      <button class="drawer-item" onclick="startSpeechRecognition()">Dictado por Voz</button>
       <button class="drawer-item" onclick="insertTimestamp()">Insertar Fecha y Hora</button>
       <button class="drawer-item" onclick="formatScript()">Formatear como Guion</button>
 
-      <!-- 3. CONFIGURACIÓN DE TIPOGRAFÍA -->
-      <div class="drawer-section-title">03. Selector de Fuente</div>
+      <!-- 4. CONFIGURACIÓN DE TIPOGRAFÍA -->
+      <div class="drawer-section-title">04. Selector de Fuente</div>
       <button class="drawer-item" onclick="setFontFamily('font-segoe')">Segoe UI</button>
       <button class="drawer-item" onclick="setFontFamily('font-mono')">Monospace (Guion)</button>
       <button class="drawer-item" onclick="setFontFamily('font-serif')">Serif (Editorial)</button>
       <button class="drawer-item" onclick="setFontFamily('font-sans')">Sans-Serif (Moderna)</button>
-      
-      <div class="drawer-row" style="margin-top: 6px;">
-        <button class="drawer-item" onclick="setFontSize('12px')">P</button>
-        <button class="drawer-item" onclick="setFontSize('15px')">M</button>
-        <button class="drawer-item" onclick="setFontSize('18px')">G</button>
-      </div>
 
-      <!-- 4. APARIENCIA Y NEÓN -->
-      <div class="drawer-section-title">04. Color de Acento</div>
+      <!-- 5. APARIENCIA Y NEÓN -->
+      <div class="drawer-section-title">05. Color de Acento</div>
       <div class="drawer-row">
         <button class="drawer-item" onclick="setAccent('')">Blanco</button>
         <button class="drawer-item" onclick="setAccent('accent-green')">Neón</button>
         <button class="drawer-item" onclick="setAccent('accent-amber')">Ámbar</button>
       </div>
 
-      <!-- 5. ATAJOS DE TECLADO -->
-      <div class="drawer-section-title">05. Atajos Rápidos</div>
-      <button class="drawer-item" onclick="showShortcuts()">Ver Atajos de Teclado</button>
-
-      <!-- 6. PLANTILLAS -->
-      <div class="drawer-section-title">06. Cargar Plantillas</div>
-      <button class="drawer-item" onclick="loadTemplate('guion')">Guion Teatral / Cine</button>
-      <button class="drawer-item" onclick="loadTemplate('nota')">Nota de Prensa</button>
-
-      <!-- 7. MÉTRICAS -->
-      <div class="drawer-section-title">07. Métricas del Texto</div>
+      <!-- 6. MÉTRICAS -->
+      <div class="drawer-section-title">06. Métricas del Texto</div>
       <div class="stats-box" id="statsBox">
         Palabras: 0<br>
         Caracteres: 0<br>
@@ -590,30 +553,20 @@
       </div>
     </div>
 
-    <!-- PANEL INFERIOR -->
+    <!-- BARRA INFERIOR COMPACTA (1 SOLA FILA) -->
     <div class="bottom-grid">
-      <div class="toolbar-tools">
-        <div class="tool-row">
-          <span class="tool-num">01</span>
-          <button class="tool-btn" onclick="execCmd('bold')">NEGRITA</button>
-          <button class="tool-btn" onclick="execCmd('italic')">CURSIVA</button>
-        </div>
-        <div class="tool-row">
-          <span class="tool-num">02</span>
-          <button class="tool-btn" onclick="execCmd('underline')">SUBRAYADO</button>
-          <button class="tool-btn" onclick="execCmd('formatBlock', 'H2')">ENCABEZADO</button>
-        </div>
-        <div class="tool-row" style="border-bottom: none;">
-          <span class="tool-num">03</span>
-          <button class="tool-btn" onclick="execCmd('insertUnorderedList')">LISTA</button>
-          <button class="tool-btn" onclick="execCmd('removeFormat')">LIMPIAR</button>
-        </div>
+      <div class="toolbar-tools-compact">
+        <button class="tool-btn-compact" onclick="execCmd('bold')"><b>B</b></button>
+        <button class="tool-btn-compact" onclick="execCmd('italic')"><i>I</i></button>
+        <button class="tool-btn-compact" onclick="execCmd('underline')"><u>U</u></button>
+        <button class="tool-btn-compact" onclick="execCmd('formatBlock', 'H2')">H2</button>
+        <button class="tool-btn-compact" onclick="execCmd('insertUnorderedList')">• Lista</button>
       </div>
 
       <div class="export-wrapper">
         <div class="export-dropdown" id="exportMenu">
-          <button class="export-option" onclick="exportToWord()">FORMATO .DOCX</button>
-          <button class="export-option" onclick="exportToPDF()">FORMATO PDF</button>
+          <button class="export-option" onclick="exportToWord()">.DOCX</button>
+          <button class="export-option" onclick="exportToPDF()">PDF</button>
         </div>
         <button class="btn-export-trigger" onclick="toggleExportMenu()">
           EXPORTAR <span>▲</span>
@@ -636,7 +589,6 @@
       saveData();
     }
 
-    /* MODO ZEN */
     function toggleZenMode() {
       document.getElementById('appFrame').classList.toggle('zen-mode');
       if (document.getElementById('drawerMenu').classList.contains('open')) {
@@ -644,7 +596,6 @@
       }
     }
 
-    /* AUTO-GUARDADO (LocalStorage) */
     function saveData() {
       const title = document.getElementById('docTitle').innerText;
       const content = document.getElementById('editor').innerHTML;
@@ -665,7 +616,6 @@
       updateStats();
     }
 
-    /* BUSCAR Y REEMPLAZAR */
     function toggleSearchBar() {
       document.getElementById('searchBar').classList.toggle('open');
       toggleDrawer();
@@ -683,7 +633,6 @@
       alert('Reemplazo completado');
     }
 
-    /* DICTADO POR VOZ */
     function startSpeechRecognition() {
       toggleDrawer();
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -708,7 +657,6 @@
       recognition.start();
     }
 
-    /* INSERTAR FECHA/HORA */
     function insertTimestamp() {
       const now = new Date();
       const timestamp = `[${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}] `;
@@ -717,7 +665,6 @@
       saveData();
     }
 
-    /* MODO GUION */
     function formatScript() {
       setFontFamily('font-mono');
       const editor = document.getElementById('editor');
@@ -734,24 +681,17 @@
       saveData();
     }
 
-    /* SELECTOR DE FUENTES */
     function setFontFamily(className) {
       const editor = document.getElementById('editor');
       editor.className = className;
       saveData();
     }
 
-    function setFontSize(size) {
-      document.getElementById('editor').style.fontSize = size;
-    }
-
-    /* COLOR DE ACENTO */
     function setAccent(accentClass) {
       document.body.classList.remove('accent-green', 'accent-amber');
       if (accentClass) document.body.classList.add(accentClass);
     }
 
-    /* GESTIÓN DE DOCUMENTO */
     function newDocument() {
       if (confirm("¿Deseas crear un nuevo documento? Se limpiará el espacio actual.")) {
         document.getElementById('docTitle').innerText = "TÍTULO DEL DOCUMENTO";
@@ -775,26 +715,6 @@
       const text = document.getElementById('editor').innerText;
       navigator.clipboard.writeText(text);
       alert("Texto copiado al portapapeles.");
-      toggleDrawer();
-    }
-
-    function showShortcuts() {
-      alert("Atajos del Teclado:\n\n• Ctrl + B: Negrita\n• Ctrl + I: Cursiva\n• Ctrl + U: Subrayado\n• Ctrl + Z: Deshacer");
-    }
-
-    function loadTemplate(type) {
-      const editor = document.getElementById('editor');
-      const title = document.getElementById('docTitle');
-      
-      if (type === 'guion') {
-        title.innerText = "ESCENA 01 - INTERIOR / NOCHE";
-        editor.innerHTML = "<b>PERSONAJE</b><br>(pausa y mira hacia la ventana)<br>Aquí va el diálogo o la acotación dramática del guion...";
-      } else if (type === 'nota') {
-        title.innerText = "COMUNICADO DE PRENSA";
-        editor.innerHTML = "<b>CIUDAD DE MÉXICO</b> — Escribe el cuerpo de la nota o comunicado oficial aquí manteniendo un tono sobrio y estructurado.";
-      }
-      saveData();
-      updateStats();
       toggleDrawer();
     }
 
@@ -826,13 +746,11 @@
       toggleBtn.innerText = body.classList.contains('light-mode') ? '☀️' : '🌙';
     }
 
-    /* EXPORTACIÓN A PDF CORREGIDA (Hereda la tipografía exacta del editor) */
     function exportToPDF() {
       document.getElementById('exportMenu').classList.remove('show');
       const element = document.getElementById('editor');
       const title = document.getElementById('docTitle').innerText;
       
-      // Obtener la tipografía del editor en el momento de exportar
       const computedStyle = window.getComputedStyle(element);
       const activeFontFamily = computedStyle.fontFamily;
       const activeFontSize = computedStyle.fontSize;
@@ -894,7 +812,6 @@
       });
     }
 
-    // Inicializar guardado previo
     loadSavedData();
   </script>
 </body>
