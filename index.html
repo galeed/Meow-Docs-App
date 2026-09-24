@@ -266,6 +266,7 @@
       transition: font-size 0.2s ease;
     }
 
+    #editor.font-oswald { font-family: 'Oswald', sans-serif; }
     #editor.font-helvetica { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
     #editor.font-segoe { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
     #editor.font-mono { font-family: 'Courier New', Courier, monospace; }
@@ -580,6 +581,7 @@
         05. Selector de Fuente <span id="arrow-4">▼</span>
       </button>
       <div class="drawer-dropdown-content" id="acc-4">
+        <button class="drawer-sub-item" onclick="setFontFamily('font-oswald')">Oswald (Título)</button>
         <button class="drawer-sub-item" onclick="setFontFamily('font-helvetica')">Helvetica / Helvetica Neue</button>
         <button class="drawer-sub-item" onclick="setFontFamily('font-segoe')">Segoe UI</button>
         <button class="drawer-sub-item" onclick="setFontFamily('font-mono')">Monospace (Guion / Código)</button>
