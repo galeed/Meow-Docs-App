@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A24 / WORD EDITOR</title>
+  <title>Meow Docs</title>
   
   <!-- Fuentes estilo A24 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +15,39 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
+    :root {
+      --bg: #050505;
+      --app-bg: #000000;
+      --text: #ffffff;
+      --border: #ffffff;
+      --subtext: #888888;
+      --muted-num: #666666;
+      --hover-bg: #ffffff;
+      --hover-text: #000000;
+      --hover-tool: #111111;
+      --export-primary-bg: #ffffff;
+      --export-primary-text: #000000;
+      --export-primary-hover: #cccccc;
+      --placeholder: #444444;
+    }
+
+    /* MODO CLARO */
+    body.light-mode {
+      --bg: #f0f0f0;
+      --app-bg: #ffffff;
+      --text: #000000;
+      --border: #000000;
+      --subtext: #666666;
+      --muted-num: #999999;
+      --hover-bg: #000000;
+      --hover-text: #ffffff;
+      --hover-tool: #f0f0f0;
+      --export-primary-bg: #000000;
+      --export-primary-text: #ffffff;
+      --export-primary-hover: #333333;
+      --placeholder: #aaaaaa;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -22,14 +55,15 @@
     }
 
     body {
-      background-color: #050505;
-      color: #ffffff;
+      background-color: var(--bg);
+      color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       min-height: 100vh;
       padding: 12px;
       display: flex;
       justify-content: center;
       align-items: center;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     /* MARCO PRINCIPAL ALREDEDOR DE TODA LA APP */
@@ -37,39 +71,42 @@
       width: 100%;
       max-width: 900px;
       min-height: calc(100vh - 24px);
-      border: 1px solid #ffffff;
+      border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       position: relative;
-      background-color: #000000;
+      background-color: var(--app-bg);
+      transition: border-color 0.3s ease, background-color 0.3s ease;
     }
 
-    /* BARRA SUPERIOR GRID TIEL A24 */
+    /* BARRA SUPERIOR GRID ESTILO A24 */
     header {
       display: grid;
       grid-template-columns: 48px 1fr auto auto;
-      border-bottom: 1px solid #ffffff;
+      border-bottom: 1px solid var(--border);
       align-items: stretch;
+      transition: border-color 0.3s ease;
     }
 
     .header-btn {
       background: transparent;
-      color: #ffffff;
+      color: var(--text);
       border: none;
-      border-right: 1px solid #ffffff;
+      border-right: 1px solid var(--border);
       padding: 12px;
-      font-size: 11px;
+      font-size: 14px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: background 0.2s, color 0.2s, border-color 0.3s ease;
     }
 
     .header-btn:hover {
-      background: #ffffff;
-      color: #000000;
+      background: var(--hover-bg);
+      color: var(--hover-text);
     }
 
     .brand-title {
@@ -80,6 +117,7 @@
       text-align: center;
       padding: 10px 0;
       font-weight: 700;
+      color: var(--text);
     }
 
     /* CUERPO CON TEXTO LATERAL ROTADO Y EDITOR */
@@ -91,11 +129,12 @@
 
     .sidebar-text {
       width: 32px;
-      border-right: 1px solid #ffffff;
+      border-right: 1px solid var(--border);
       display: flex;
       align-items: flex-start;
       justify-content: center;
       padding-top: 20px;
+      transition: border-color 0.3s ease;
     }
 
     .sidebar-text span {
@@ -104,11 +143,11 @@
       font-size: 9px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #aaaaaa;
+      color: var(--subtext);
       white-space: nowrap;
     }
 
-    /* AREA DEL EDITOR DE TEXTO */
+    /* ÁREA DEL EDITOR DE TEXTO */
     .editor-wrapper {
       flex: 1;
       padding: 30px 24px;
@@ -123,11 +162,12 @@
       letter-spacing: 1px;
       margin-bottom: 8px;
       line-height: 1.1;
+      color: var(--text);
     }
 
     .doc-subtitle {
       font-size: 12px;
-      color: #888888;
+      color: var(--subtext);
       margin-bottom: 24px;
       line-height: 1.4;
       max-width: 480px;
@@ -136,7 +176,7 @@
     #editor {
       flex: 1;
       min-height: 350px;
-      color: #ffffff;
+      color: var(--text);
       font-size: 14px;
       line-height: 1.7;
       outline: none;
@@ -146,14 +186,15 @@
 
     #editor:empty:before {
       content: "Empieza a escribir tu documento...";
-      color: #444444;
+      color: var(--placeholder);
     }
 
-    /* BARRA DE HERRAMIENTAS Y EXPORTACIÓN INFERIOR (GRID A24) */
+    /* BARRA DE HERRAMIENTAS Y EXPORTACIÓN INFERIOR */
     .bottom-grid {
-      border-top: 1px solid #ffffff;
+      border-top: 1px solid var(--border);
       display: grid;
       grid-template-columns: 1fr auto;
+      transition: border-color 0.3s ease;
     }
 
     .toolbar-tools {
@@ -163,7 +204,8 @@
 
     .tool-row {
       display: flex;
-      border-bottom: 1px solid #ffffff;
+      border-bottom: 1px solid var(--border);
+      transition: border-color 0.3s ease;
     }
 
     .tool-row:last-child {
@@ -173,16 +215,17 @@
     .tool-num {
       width: 40px;
       font-size: 10px;
-      color: #666666;
+      color: var(--muted-num);
       padding: 10px;
-      border-right: 1px solid #ffffff;
+      border-right: 1px solid var(--border);
       display: flex;
       align-items: center;
+      transition: border-color 0.3s ease;
     }
 
     .tool-btn {
       background: transparent;
-      color: #ffffff;
+      color: var(--text);
       border: none;
       padding: 10px 16px;
       font-size: 10px;
@@ -191,21 +234,23 @@
       cursor: pointer;
       text-align: left;
       flex: 1;
+      transition: background 0.2s ease;
     }
 
     .tool-btn:hover {
-      background: #111111;
+      background: var(--hover-tool);
     }
 
-    /* BLOQUE SÓLIDO DE ACCIÓN PRINCIPAL (JOIN STYLE) */
+    /* BLOQUE SÓLIDO DE ACCIÓN PRINCIPAL */
     .action-block {
       display: flex;
-      border-left: 1px solid #ffffff;
+      border-left: 1px solid var(--border);
+      transition: border-color 0.3s ease;
     }
 
     .btn-export {
-      background: #ffffff;
-      color: #000000;
+      background: var(--export-primary-bg);
+      color: var(--export-primary-text);
       border: none;
       padding: 0 28px;
       font-family: 'Oswald', sans-serif;
@@ -221,19 +266,20 @@
     }
 
     .btn-export:hover {
-      background: #cccccc;
+      background: var(--export-primary-hover);
     }
 
     .btn-export.secondary {
-      background: #000000;
-      color: #ffffff;
-      border-right: 1px solid #ffffff;
+      background: transparent;
+      color: var(--text);
+      border-right: 1px solid var(--border);
       font-size: 14px;
+      transition: border-color 0.3s ease, background 0.2s, color 0.2s;
     }
 
     .btn-export.secondary:hover {
-      background: #ffffff;
-      color: #000000;
+      background: var(--hover-bg);
+      color: var(--hover-text);
     }
   </style>
 </head>
@@ -243,19 +289,19 @@
     <!-- ENCABEZADO -->
     <header>
       <button class="header-btn" onclick="execCmd('undo')">☰</button>
-      <div class="brand-title">A24</div>
-      <button class="header-btn">GIFT</button>
+      <div class="brand-title">MEOW DOCS</div>
+      <button class="header-btn" id="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">🌙</button>
       <button class="header-btn" style="border-right: none;">GALEED</button>
     </header>
 
     <!-- ÁREA CENTRAL CON TEXTO LATERAL Y EDITOR -->
     <div class="main-body">
       <div class="sidebar-text">
-        <span>A24 EDITORIAL WRITER</span>
+        <span>MEOW DOCS EDITORIAL WRITER</span>
       </div>
       
       <div class="editor-wrapper">
-        <div class="doc-title">TITULO DEL DOCUMENTO</div>
+        <div class="doc-title">TÍTULO DEL DOCUMENTO</div>
         <div class="doc-subtitle">Redacta y aplica formato minimalista. Los archivos exportados mantendrán la estructura limpia y la compatibilidad con MS Word y PDF.</div>
         
         <div id="editor" contenteditable="true">
@@ -296,6 +342,19 @@
       document.execCommand(command, false, value);
     }
 
+    // Alternar Modo Oscuro / Modo Claro
+    function toggleTheme() {
+      const body = document.body;
+      const toggleBtn = document.getElementById('theme-toggle');
+      body.classList.toggle('light-mode');
+
+      if (body.classList.contains('light-mode')) {
+        toggleBtn.innerText = '☀️';
+      } else {
+        toggleBtn.innerText = '🌙';
+      }
+    }
+
     // Exportar a PDF
     function exportToPDF() {
       const element = document.getElementById('editor');
@@ -304,11 +363,12 @@
       const container = document.createElement('div');
       container.style.padding = '20px';
       container.style.color = '#000000';
+      container.style.backgroundColor = '#ffffff';
       container.innerHTML = `<h1 style="font-family: sans-serif; text-transform: uppercase;">${title}</h1><hr/><br/>` + element.innerHTML;
 
       const opt = {
         margin:       0.8,
-        filename:     'documento_a24.pdf',
+        filename:     'meow_docs.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2 },
         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -342,7 +402,7 @@
       docx.Packer.toBlob(doc).then(blob => {
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'documento_a24.docx';
+        link.download = 'meow_docs.docx';
         link.click();
       });
     }
