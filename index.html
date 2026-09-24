@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Meow Docs</title>
   
   <!-- Fuentes estilo A24 -->
@@ -59,30 +59,31 @@
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       min-height: 100vh;
-      padding: 12px;
+      min-height: -webkit-fill-available;
+      padding: 8px;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: stretch;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    /* MARCO PRINCIPAL ALREDEDOR DE TODA LA APP */
+    /* MARCO ADAPTABLE A CUALQUIER PANTALLA */
     .app-frame {
       width: 100%;
       max-width: 900px;
-      min-height: calc(100vh - 24px);
-      border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       position: relative;
       background-color: var(--app-bg);
+      border: 1px solid var(--border);
       transition: border-color 0.3s ease, background-color 0.3s ease;
+      overflow: hidden;
     }
 
-    /* BARRA SUPERIOR GRID ESTILO A24 */
+    /* BARRA SUPERIOR */
     header {
       display: grid;
-      grid-template-columns: 48px 1fr auto auto;
+      grid-template-columns: 40px 1fr 40px 70px;
       border-bottom: 1px solid var(--border);
       align-items: stretch;
       transition: border-color 0.3s ease;
@@ -93,9 +94,9 @@
       color: var(--text);
       border: none;
       border-right: 1px solid var(--border);
-      padding: 12px;
-      font-size: 14px;
-      letter-spacing: 1.5px;
+      padding: 10px 4px;
+      font-size: 11px;
+      letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
       display: flex;
@@ -111,16 +112,19 @@
 
     .brand-title {
       font-family: 'Oswald', sans-serif;
-      font-size: 22px;
-      letter-spacing: 3px;
+      font-size: 18px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       text-align: center;
       padding: 10px 0;
       font-weight: 700;
       color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    /* CUERPO CON TEXTO LATERAL ROTADO Y EDITOR */
+    /* CUERPO PRINCIPAL */
     .main-body {
       display: flex;
       flex: 1;
@@ -128,57 +132,58 @@
     }
 
     .sidebar-text {
-      width: 32px;
+      width: 24px;
       border-right: 1px solid var(--border);
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding-top: 20px;
+      padding-top: 16px;
       transition: border-color 0.3s ease;
+      flex-shrink: 0;
     }
 
     .sidebar-text span {
       writing-mode: vertical-rl;
       transform: rotate(180deg);
-      font-size: 9px;
-      letter-spacing: 2px;
+      font-size: 8px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--subtext);
       white-space: nowrap;
     }
 
-    /* ÁREA DEL EDITOR DE TEXTO */
+    /* ÁREA DEL EDITOR */
     .editor-wrapper {
       flex: 1;
-      padding: 30px 24px;
+      padding: 20px 16px;
       display: flex;
       flex-direction: column;
+      min-width: 0;
     }
 
     .doc-title {
       font-family: 'Oswald', sans-serif;
-      font-size: 32px;
+      font-size: 26px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       line-height: 1.1;
       color: var(--text);
     }
 
     .doc-subtitle {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--subtext);
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       line-height: 1.4;
-      max-width: 480px;
     }
 
     #editor {
       flex: 1;
-      min-height: 350px;
+      min-height: 250px;
       color: var(--text);
       font-size: 14px;
-      line-height: 1.7;
+      line-height: 1.6;
       outline: none;
       border: none;
       font-family: inherit;
@@ -189,17 +194,18 @@
       color: var(--placeholder);
     }
 
-    /* BARRA DE HERRAMIENTAS Y EXPORTACIÓN INFERIOR */
+    /* HERRAMIENTAS INFERIORES Y BOTÓN EXPORTAR */
     .bottom-grid {
       border-top: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: 1fr auto;
+      display: flex;
+      flex-direction: column;
       transition: border-color 0.3s ease;
     }
 
     .toolbar-tools {
       display: flex;
       flex-direction: column;
+      width: 100%;
     }
 
     .tool-row {
@@ -208,31 +214,29 @@
       transition: border-color 0.3s ease;
     }
 
-    .tool-row:last-child {
-      border-bottom: none;
-    }
-
     .tool-num {
-      width: 40px;
-      font-size: 10px;
+      width: 32px;
+      font-size: 9px;
       color: var(--muted-num);
-      padding: 10px;
+      padding: 8px 4px;
       border-right: 1px solid var(--border);
       display: flex;
       align-items: center;
+      justify-content: center;
       transition: border-color 0.3s ease;
+      flex-shrink: 0;
     }
 
     .tool-btn {
       background: transparent;
       color: var(--text);
       border: none;
-      padding: 10px 16px;
-      font-size: 10px;
-      letter-spacing: 1.5px;
+      padding: 8px 10px;
+      font-size: 9px;
+      letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
-      text-align: left;
+      text-align: center;
       flex: 1;
       transition: background 0.2s ease;
     }
@@ -241,20 +245,20 @@
       background: var(--hover-tool);
     }
 
-    /* BLOQUE SÓLIDO DE ACCIÓN PRINCIPAL */
-    .action-block {
-      display: flex;
-      border-left: 1px solid var(--border);
-      transition: border-color 0.3s ease;
+    /* CONTENEDOR Y MENÚ DESPLEGABLE DE EXPORTACIÓN */
+    .export-wrapper {
+      position: relative;
+      width: 100%;
     }
 
-    .btn-export {
+    .btn-export-trigger {
+      width: 100%;
       background: var(--export-primary-bg);
       color: var(--export-primary-text);
       border: none;
-      padding: 0 28px;
+      padding: 14px 0;
       font-family: 'Oswald', sans-serif;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -263,23 +267,91 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 6px;
     }
 
-    .btn-export:hover {
+    .btn-export-trigger:hover {
       background: var(--export-primary-hover);
     }
 
-    .btn-export.secondary {
-      background: transparent;
-      color: var(--text);
-      border-right: 1px solid var(--border);
-      font-size: 14px;
-      transition: border-color 0.3s ease, background 0.2s, color 0.2s;
+    .export-dropdown {
+      display: none;
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      width: 100%;
+      background: var(--app-bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      z-index: 10;
+      flex-direction: column;
     }
 
-    .btn-export.secondary:hover {
+    .export-dropdown.show {
+      display: flex;
+    }
+
+    .export-option {
+      background: transparent;
+      color: var(--text);
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 12px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .export-option:last-child {
+      border-bottom: none;
+    }
+
+    .export-option:hover {
       background: var(--hover-bg);
       color: var(--hover-text);
+    }
+
+    /* VISTA DE ESCRITORIO (Ajuste suave) */
+    @media (min-width: 600px) {
+      body {
+        padding: 12px;
+      }
+      .brand-title {
+        font-size: 22px;
+      }
+      header {
+        grid-template-columns: 48px 1fr 48px 90px;
+      }
+      .sidebar-text {
+        width: 32px;
+      }
+      .sidebar-text span {
+        font-size: 9px;
+      }
+      .editor-wrapper {
+        padding: 30px 24px;
+      }
+      .doc-title {
+        font-size: 32px;
+      }
+      .bottom-grid {
+        display: grid;
+        grid-template-columns: 1fr auto;
+      }
+      .toolbar-tools {
+        width: auto;
+      }
+      .export-wrapper {
+        width: 160px;
+        border-left: 1px solid var(--border);
+      }
+      .btn-export-trigger {
+        height: 100%;
+      }
     }
   </style>
 </head>
@@ -310,7 +382,7 @@
       </div>
     </div>
 
-    <!-- PANEL INFERIOR DE HERRAMIENTAS Y EXPORTACIÓN -->
+    <!-- PANEL INFERIOR Y EXPORTAR -->
     <div class="bottom-grid">
       <div class="toolbar-tools">
         <div class="tool-row">
@@ -323,16 +395,22 @@
           <button class="tool-btn" onclick="execCmd('underline')">SUBRAYADO</button>
           <button class="tool-btn" onclick="execCmd('formatBlock', 'H2')">ENCABEZADO</button>
         </div>
-        <div class="tool-row">
+        <div class="tool-row" style="border-bottom: none;">
           <span class="tool-num">03</span>
           <button class="tool-btn" onclick="execCmd('insertUnorderedList')">LISTA</button>
           <button class="tool-btn" onclick="execCmd('removeFormat')">LIMPIAR</button>
         </div>
       </div>
 
-      <div class="action-block">
-        <button class="btn-export secondary" onclick="exportToWord()">.DOCX</button>
-        <button class="btn-export" onclick="exportToPDF()">PDF</button>
+      <!-- BOTÓN CON MENÚ DESPLEGABLE -->
+      <div class="export-wrapper">
+        <div class="export-dropdown" id="exportMenu">
+          <button class="export-option" onclick="exportToWord()">FORMATO .DOCX</button>
+          <button class="export-option" onclick="exportToPDF()">FORMATO PDF</button>
+        </div>
+        <button class="btn-export-trigger" onclick="toggleExportMenu()">
+          EXPORTAR <span>▲</span>
+        </button>
       </div>
     </div>
   </div>
@@ -341,6 +419,20 @@
     function execCmd(command, value = null) {
       document.execCommand(command, false, value);
     }
+
+    // Mostrar/Ocultar Menú Desplegable
+    function toggleExportMenu() {
+      const menu = document.getElementById('exportMenu');
+      menu.classList.toggle('show');
+    }
+
+    // Cerrar menú al hacer clic fuera
+    document.addEventListener('click', function(event) {
+      const wrapper = document.querySelector('.export-wrapper');
+      if (!wrapper.contains(event.target)) {
+        document.getElementById('exportMenu').classList.remove('show');
+      }
+    });
 
     // Alternar Modo Oscuro / Modo Claro
     function toggleTheme() {
@@ -357,6 +449,7 @@
 
     // Exportar a PDF
     function exportToPDF() {
+      document.getElementById('exportMenu').classList.remove('show');
       const element = document.getElementById('editor');
       const title = document.querySelector('.doc-title').innerText;
       
@@ -379,6 +472,7 @@
 
     // Exportar a Word (.docx)
     function exportToWord() {
+      document.getElementById('exportMenu').classList.remove('show');
       const content = document.getElementById('editor').innerText;
       const title = document.querySelector('.doc-title').innerText;
 
