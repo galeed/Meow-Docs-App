@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A24 / WORD EDITOR</title>
+  
+  <!-- Fuentes estilo A24 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Librerías de Exportación -->
+  <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #050505;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      padding: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* MARCO PRINCIPAL ALREDEDOR DE TODA LA APP */
+    .app-frame {
+      width: 100%;
+      max-width: 900px;
+      min-height: calc(100vh - 24px);
+      border: 1px solid #ffffff;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background-color: #000000;
+    }
+
+    /* BARRA SUPERIOR GRID TIEL A24 */
+    header {
+      display: grid;
+      grid-template-columns: 48px 1fr auto auto;
+      border-bottom: 1px solid #ffffff;
+      align-items: stretch;
+    }
+
+    .header-btn {
+      background: transparent;
+      color: #ffffff;
+      border: none;
+      border-right: 1px solid #ffffff;
+      padding: 12px;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-btn:hover {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .brand-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 22px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 10px 0;
+      font-weight: 700;
+    }
+
+    /* CUERPO CON TEXTO LATERAL ROTADO Y EDITOR */
+    .main-body {
+      display: flex;
+      flex: 1;
+      position: relative;
+    }
+
+    .sidebar-text {
+      width: 32px;
+      border-right: 1px solid #ffffff;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 20px;
+    }
+
+    .sidebar-text span {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #aaaaaa;
+      white-space: nowrap;
+    }
+
+    /* AREA DEL EDITOR DE TEXTO */
+    .editor-wrapper {
+      flex: 1;
+      padding: 30px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .doc-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 32px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+
+    .doc-subtitle {
+      font-size: 12px;
+      color: #888888;
+      margin-bottom: 24px;
+      line-height: 1.4;
+      max-width: 480px;
+    }
+
+    #editor {
+      flex: 1;
+      min-height: 350px;
+      color: #ffffff;
+      font-size: 14px;
+      line-height: 1.7;
+      outline: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    #editor:empty:before {
+      content: "Empieza a escribir tu documento...";
+      color: #444444;
+    }
+
+    /* BARRA DE HERRAMIENTAS Y EXPORTACIÓN INFERIOR (GRID A24) */
+    .bottom-grid {
+      border-top: 1px solid #ffffff;
+      display: grid;
+      grid-template-columns: 1fr auto;
+    }
+
+    .toolbar-tools {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tool-row {
+      display: flex;
+      border-bottom: 1px solid #ffffff;
+    }
+
+    .tool-row:last-child {
+      border-bottom: none;
+    }
+
+    .tool-num {
+      width: 40px;
+      font-size: 10px;
+      color: #666666;
+      padding: 10px;
+      border-right: 1px solid #ffffff;
+      display: flex;
+      align-items: center;
+    }
+
+    .tool-btn {
+      background: transparent;
+      color: #ffffff;
+      border: none;
+      padding: 10px 16px;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-align: left;
+      flex: 1;
+    }
+
+    .tool-btn:hover {
+      background: #111111;
+    }
+
+    /* BLOQUE SÓLIDO DE ACCIÓN PRINCIPAL (JOIN STYLE) */
+    .action-block {
+      display: flex;
+      border-left: 1px solid #ffffff;
+    }
+
+    .btn-export {
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      padding: 0 28px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-export:hover {
+      background: #cccccc;
+    }
+
+    .btn-export.secondary {
+      background: #000000;
+      color: #ffffff;
+      border-right: 1px solid #ffffff;
+      font-size: 14px;
+    }
+
+    .btn-export.secondary:hover {
+      background: #ffffff;
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-frame">
+    <!-- ENCABEZADO -->
+    <header>
+      <button class="header-btn" onclick="execCmd('undo')">☰</button>
+      <div class="brand-title">A24</div>
+      <button class="header-btn">GIFT</button>
+      <button class="header-btn" style="border-right: none;">GALEED</button>
+    </header>
+
+    <!-- ÁREA CENTRAL CON TEXTO LATERAL Y EDITOR -->
+    <div class="main-body">
+      <div class="sidebar-text">
+        <span>A24 EDITORIAL WRITER</span>
+      </div>
+      
+      <div class="editor-wrapper">
+        <div class="doc-title">TITULO DEL DOCUMENTO</div>
+        <div class="doc-subtitle">Redacta y aplica formato minimalista. Los archivos exportados mantendrán la estructura limpia y la compatibilidad con MS Word y PDF.</div>
+        
+        <div id="editor" contenteditable="true">
+          Escribe aquí el contenido principal de tu guion, nota o documento...
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL INFERIOR DE HERRAMIENTAS Y EXPORTACIÓN -->
+    <div class="bottom-grid">
+      <div class="toolbar-tools">
+        <div class="tool-row">
+          <span class="tool-num">01</span>
+          <button class="tool-btn" onclick="execCmd('bold')">NEGRITA</button>
+          <button class="tool-btn" onclick="execCmd('italic')">CURSIVA</button>
+        </div>
+        <div class="tool-row">
+          <span class="tool-num">02</span>
+          <button class="tool-btn" onclick="execCmd('underline')">SUBRAYADO</button>
+          <button class="tool-btn" onclick="execCmd('formatBlock', 'H2')">ENCABEZADO</button>
+        </div>
+        <div class="tool-row">
+          <span class="tool-num">03</span>
+          <button class="tool-btn" onclick="execCmd('insertUnorderedList')">LISTA</button>
+          <button class="tool-btn" onclick="execCmd('removeFormat')">LIMPIAR</button>
+        </div>
+      </div>
+
+      <div class="action-block">
+        <button class="btn-export secondary" onclick="exportToWord()">.DOCX</button>
+        <button class="btn-export" onclick="exportToPDF()">PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function execCmd(command, value = null) {
+      document.execCommand(command, false, value);
+    }
+
+    // Exportar a PDF
+    function exportToPDF() {
+      const element = document.getElementById('editor');
+      const title = document.querySelector('.doc-title').innerText;
+      
+      const container = document.createElement('div');
+      container.style.padding = '20px';
+      container.style.color = '#000000';
+      container.innerHTML = `<h1 style="font-family: sans-serif; text-transform: uppercase;">${title}</h1><hr/><br/>` + element.innerHTML;
+
+      const opt = {
+        margin:       0.8,
+        filename:     'documento_a24.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      
+      html2pdf().set(opt).from(container).save();
+    }
+
+    // Exportar a Word (.docx)
+    function exportToWord() {
+      const content = document.getElementById('editor').innerText;
+      const title = document.querySelector('.doc-title').innerText;
+
+      const doc = new docx.Document({
+        sections: [{
+          properties: {},
+          children: [
+            new docx.Paragraph({
+              children: [new docx.TextRun({ text: title, bold: true, size: 36 })],
+            }),
+            new docx.Paragraph({ children: [new docx.TextRun({ text: "", break: 1 })] }),
+            ...content.split('\n').map(line => {
+              return new docx.Paragraph({
+                children: [new docx.TextRun({ text: line, size: 24 })]
+              });
+            })
+          ]
+        }]
+      });
+
+      docx.Packer.toBlob(doc).then(blob => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'documento_a24.docx';
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>
