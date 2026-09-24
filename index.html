@@ -30,6 +30,11 @@
       --export-primary-hover: #cccccc;
       --placeholder: #444444;
       --accent: #ffffff;
+
+      /* Grosor de bordes ajustado */
+      --border-outer: 3px;  /* Cuadro contenedor principal y menús flotantes */
+      --border-thick: 2px;  /* Divisiones estructurales de secciones */
+      --border-thin: 1px;   /* Líneas internas ligeras */
     }
 
     body.light-mode {
@@ -79,6 +84,7 @@
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
+    /* MARCO PRINCIPAL CON BORDE MÁS GRUESO */
     .app-frame {
       width: 100%;
       max-width: 900px;
@@ -88,7 +94,7 @@
       flex-direction: column;
       position: relative;
       background-color: var(--app-bg);
-      border: 1px solid var(--border);
+      border: var(--border-outer) solid var(--border);
       transition: border-color 0.3s ease, background-color 0.3s ease;
       overflow: hidden;
     }
@@ -108,7 +114,7 @@
       right: 12px;
       background: var(--app-bg);
       color: var(--text);
-      border: 1px solid var(--border);
+      border: var(--border-thick) solid var(--border);
       padding: 6px 10px;
       font-size: 10px;
       letter-spacing: 1px;
@@ -124,8 +130,8 @@
     /* ENCABEZADO */
     header {
       display: grid;
-      grid-template-columns: 40px 1fr 40px 70px;
-      border-bottom: 1px solid var(--border);
+      grid-template-columns: 44px 1fr 44px 70px;
+      border-bottom: var(--border-thick) solid var(--border);
       align-items: stretch;
       flex-shrink: 0;
       transition: border-color 0.3s ease;
@@ -135,7 +141,7 @@
       background: transparent;
       color: var(--text);
       border: none;
-      border-right: 1px solid var(--border);
+      border-right: var(--border-thick) solid var(--border);
       padding: 10px 4px;
       font-size: 11px;
       letter-spacing: 1px;
@@ -175,8 +181,8 @@
     }
 
     .sidebar-text {
-      width: 24px;
-      border-right: 1px solid var(--border);
+      width: 26px;
+      border-right: var(--border-thick) solid var(--border);
       display: flex;
       align-items: flex-start;
       justify-content: center;
@@ -228,7 +234,7 @@
       gap: 6px;
       margin-bottom: 12px;
       background: var(--app-bg);
-      border: 1px solid var(--border);
+      border: var(--border-thick) solid var(--border);
       padding: 6px;
     }
 
@@ -238,7 +244,7 @@
 
     .search-input {
       background: transparent;
-      border: 1px solid var(--border);
+      border: var(--border-thin) solid var(--border);
       color: var(--text);
       padding: 6px;
       font-size: 11px;
@@ -249,7 +255,7 @@
     .search-btn {
       background: transparent;
       color: var(--text);
-      border: 1px solid var(--border);
+      border: var(--border-thin) solid var(--border);
       padding: 6px 10px;
       font-size: 10px;
       text-transform: uppercase;
@@ -279,7 +285,7 @@
       color: var(--placeholder);
     }
 
-    /* PANEL LATERAL DE MENÚ (☰) */
+    /* PANEL LATERAL DE MENÚ (☰) CON BORDE MÁS MARCADO */
     .drawer-menu {
       position: absolute;
       top: 0;
@@ -288,7 +294,7 @@
       max-width: 320px;
       height: 100%;
       background: var(--app-bg);
-      border-right: 1px solid var(--border);
+      border-right: var(--border-outer) solid var(--border);
       z-index: 20;
       transition: left 0.3s ease;
       display: flex;
@@ -305,7 +311,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border);
+      border-bottom: var(--border-thick) solid var(--border);
       padding-bottom: 12px;
       margin-bottom: 12px;
       font-family: 'Oswald', sans-serif;
@@ -333,7 +339,7 @@
       width: 100%;
       background: transparent;
       color: var(--text);
-      border: 1px solid var(--border);
+      border: var(--border-thick) solid var(--border);
       padding: 10px;
       margin-bottom: 8px;
       font-size: 10px;
@@ -369,10 +375,10 @@
     .color-dropdown-menu {
       display: none;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
       margin-bottom: 8px;
       padding-left: 10px;
-      border-left: 1px dashed var(--border);
+      border-left: var(--border-thick) solid var(--border);
     }
 
     .color-dropdown-menu.show {
@@ -382,7 +388,7 @@
     .color-sub-item {
       background: transparent;
       color: var(--text);
-      border: 1px solid var(--border);
+      border: var(--border-thin) solid var(--border);
       padding: 8px 10px;
       font-size: 9px;
       letter-spacing: 1px;
@@ -408,7 +414,7 @@
 
     .stats-box {
       margin-top: 12px;
-      border: 1px solid var(--border);
+      border: var(--border-thick) solid var(--border);
       padding: 10px;
       font-size: 10px;
       color: var(--text);
@@ -419,7 +425,7 @@
 
     /* BARRA INFERIOR COMPACTA */
     .bottom-grid {
-      border-top: 1px solid var(--border);
+      border-top: var(--border-thick) solid var(--border);
       display: flex;
       align-items: stretch;
       flex-shrink: 0;
@@ -436,7 +442,7 @@
       background: transparent;
       color: var(--text);
       border: none;
-      border-right: 1px solid var(--border);
+      border-right: var(--border-thick) solid var(--border);
       padding: 12px 14px;
       font-size: 10px;
       letter-spacing: 1px;
@@ -450,7 +456,7 @@
       background: var(--hover-tool);
     }
 
-    /* MENÚ EXPORTAR */
+    /* MENÚ EXPORTAR CON BORDE DESTACADO */
     .export-wrapper {
       position: relative;
       width: 130px;
@@ -462,6 +468,7 @@
       background: var(--export-primary-bg);
       color: var(--export-primary-text);
       border: none;
+      border-left: var(--border-thick) solid var(--border);
       padding: 12px 0;
       font-family: 'Oswald', sans-serif;
       font-size: 14px;
@@ -482,7 +489,7 @@
       right: 0;
       width: 180px;
       background: var(--app-bg);
-      border: 1px solid var(--border);
+      border: var(--border-outer) solid var(--border);
       z-index: 10;
       flex-direction: column;
     }
@@ -495,7 +502,7 @@
       background: transparent;
       color: var(--text);
       border: none;
-      border-bottom: 1px solid var(--border);
+      border-bottom: var(--border-thick) solid var(--border);
       padding: 10px;
       font-family: 'Oswald', sans-serif;
       font-size: 12px;
@@ -622,7 +629,7 @@
       </div>
     </div>
 
-    <!-- BARRA INFERIOR COMPACTA (1 SOLA FILA) -->
+    <!-- BARRA INFERIOR COMPACTA -->
     <div class="bottom-grid">
       <div class="toolbar-tools-compact">
         <button class="tool-btn-compact" onclick="execCmd('bold')"><b>B</b></button>
@@ -770,7 +777,6 @@
     }
 
     function setAccent(accentClass) {
-      // Remover acentos previos conservando el modo claro/oscuro si está activo
       const isLight = document.body.classList.contains('light-mode');
       document.body.className = '';
       if (isLight) document.body.classList.add('light-mode');
