@@ -197,6 +197,11 @@
       outline: none;
       border: none;
       font-family: inherit;
+      transition: font-size 0.2s ease;
+    }
+
+    #editor.monospace {
+      font-family: 'Courier New', Courier, monospace;
     }
 
     #editor:empty:before {
@@ -209,8 +214,8 @@
       position: absolute;
       top: 0;
       left: -100%;
-      width: 80%;
-      max-width: 280px;
+      width: 85%;
+      max-width: 320px;
       height: 100%;
       background: var(--app-bg);
       border-right: 1px solid var(--border);
@@ -219,6 +224,7 @@
       display: flex;
       flex-direction: column;
       padding: 16px;
+      overflow-y: auto;
     }
 
     .drawer-menu.open {
@@ -245,17 +251,26 @@
       cursor: pointer;
     }
 
+    .drawer-section-title {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      color: var(--subtext);
+      text-transform: uppercase;
+      margin: 12px 0 6px 0;
+    }
+
     .drawer-item {
       background: transparent;
       color: var(--text);
       border: 1px solid var(--border);
       padding: 10px;
-      margin-bottom: 10px;
-      font-size: 11px;
+      margin-bottom: 8px;
+      font-size: 10px;
       letter-spacing: 1px;
       text-transform: uppercase;
       text-align: left;
       cursor: pointer;
+      transition: background 0.2s, color 0.2s;
     }
 
     .drawer-item:hover {
@@ -263,13 +278,27 @@
       color: var(--hover-text);
     }
 
+    .drawer-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .drawer-row .drawer-item {
+      flex: 1;
+      margin-bottom: 0;
+      text-align: center;
+    }
+
     .stats-box {
       margin-top: auto;
-      border-top: 1px solid var(--border);
-      padding-top: 12px;
+      border: 1px solid var(--border);
+      padding: 10px;
       font-size: 10px;
-      color: var(--subtext);
+      color: var(--text);
       line-height: 1.6;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     /* BARRA INFERIOR FIJA */
@@ -404,16 +433,41 @@
     <!-- MENÚ LATERAL DESPLEGABLE (☰) -->
     <div class="drawer-menu" id="drawerMenu">
       <div class="drawer-header">
-        <span>HERRAMIENTAS</span>
+        <span>MENÚ PRINCIPAL</span>
         <button class="drawer-close" onclick="toggleDrawer()">✕</button>
       </div>
-      <button class="drawer-item" onclick="newDocument()">NUEVO DOCUMENTO</button>
-      <button class="drawer-item" onclick="copyToClipboard()">COPIAR TEXTO PLANO</button>
-      <button class="drawer-item" onclick="clearEditor()">VACIAR LIENZO</button>
-      
+
+      <!-- 1. GESTIÓN DEL DOCUMENTO -->
+      <div class="drawer-section-title">01. Gestión de Archivo</div>
+      <button class="drawer-item" onclick="newDocument()">Nuevo Documento</button>
+      <button class="drawer-item" onclick="copyToClipboard()">Copiar Texto Plano</button>
+      <button class="drawer-item" onclick="clearEditor()">Vaciar Lienzo</button>
+
+      <!-- 2. ATAJOS DE TECLADO Y AYUDA -->
+      <div class="drawer-section-title">02. Atajos Rápidos</div>
+      <button class="drawer-item" onclick="showShortcuts()">Ver Atajos de Teclado</button>
+
+      <!-- 3. PLANTILLAS RÁPIDAS -->
+      <div class="drawer-section-title">03. Cargar Plantilla</div>
+      <button class="drawer-item" onclick="loadTemplate('guion')">Guion Teatral / Cine</button>
+      <button class="drawer-item" onclick="loadTemplate('nota')">Nota de Prensa</button>
+      <button class="drawer-item" onclick="loadTemplate('lista')">Lista de Tareas</button>
+
+      <!-- 4. AJUSTES DE TIPOGRAFÍA / ESTILO -->
+      <div class="drawer-section-title">04. Tamaño y Fuente</div>
+      <div class="drawer-row">
+        <button class="drawer-item" onclick="setFontSize('12px')">P</button>
+        <button class="drawer-item" onclick="setFontSize('15px')">M</button>
+        <button class="drawer-item" onclick="setFontSize('18px')">G</button>
+      </div>
+      <button class="drawer-item" onclick="toggleMonospace()">Alternar Fuente Mono/Sans</button>
+
+      <!-- 5. ESTADÍSTICAS DEL DOCUMENTO -->
+      <div class="drawer-section-title">05. Métricas del Texto</div>
       <div class="stats-box" id="statsBox">
         Palabras: 0<br>
-        Caracteres: 0
+        Caracteres: 0<br>
+        Lectura: ~0 min
       </div>
     </div>
 
@@ -478,21 +532,14 @@
       document.execCommand(command, false, value);
     }
 
-    // Toggle Menú Lateral (☰)
     function toggleDrawer() {
       document.getElementById('drawerMenu').classList.toggle('open');
     }
 
-    // Actualizar Estadísticas
-    function updateStats() {
-      const text = document.getElementById('editor').innerText.trim();
-      const words = text ? text.split(/\s+/).length : 0;
-      const chars = text.length;
-      document.getElementById('statsBox').innerHTML = `Palabras: ${words}<br>Caracteres: ${chars}`;
-    }
-
+    /* 1. GESTIÓN DE DOCUMENTO */
     function newDocument() {
-      if (confirm("¿Deseas crear un nuevo documento? Se borra el lienzo actual.")) {
+      if (confirm("¿Deseas crear un nuevo documento? Se limpiará el espacio actual.")) {
+        document.querySelector('.doc-title').innerText = "TÍTULO DEL DOCUMENTO";
         document.getElementById('editor').innerHTML = "";
         updateStats();
         toggleDrawer();
@@ -500,16 +547,62 @@
     }
 
     function clearEditor() {
-      document.getElementById('editor').innerHTML = "";
-      updateStats();
-      toggleDrawer();
+      if (confirm("¿Vaciar todo el contenido del lienzo?")) {
+        document.getElementById('editor').innerHTML = "";
+        updateStats();
+        toggleDrawer();
+      }
     }
 
     function copyToClipboard() {
       const text = document.getElementById('editor').innerText;
       navigator.clipboard.writeText(text);
-      alert("Texto copiado al portapapeles");
+      alert("Texto copiado al portapapeles.");
       toggleDrawer();
+    }
+
+    /* 2. ATAJOS DE TECLADO */
+    function showShortcuts() {
+      alert("Atajos del Teclado:\n\n• Ctrl + B: Negrita\n• Ctrl + I: Cursiva\n• Ctrl + U: Subrayado\n• Ctrl + Z: Deshacer");
+    }
+
+    /* 3. PLANTILLAS RÁPIDAS */
+    function loadTemplate(type) {
+      const editor = document.getElementById('editor');
+      const title = document.querySelector('.doc-title');
+      
+      if (type === 'guion') {
+        title.innerText = "ESCENA 01 - INTERIOR / NOCHE";
+        editor.innerHTML = "<b>PERSONAJE</b><br>(pausa y mira hacia la ventana)<br>Aquí va el diálogo o la acotación dramática del guion...";
+      } else if (type === 'nota') {
+        title.innerText = "COMUNICADO DE PRENSA";
+        editor.innerHTML = "<b>CIUDAD DE MÉXICO</b> — Escribe el cuerpo de la nota o comunicado oficial aquí manteniendo un tono sobrio y estructurado.";
+      } else if (type === 'lista') {
+        title.innerText = "LISTA DE CONTROL / TAREAS";
+        editor.innerHTML = "<ul><li>Primera tarea prioritaria</li><li>Segunda revisión técnica</li><li>Entregable final</li></ul>";
+      }
+      updateStats();
+      toggleDrawer();
+    }
+
+    /* 4. AJUSTES DE TIPOGRAFÍA Y TAMAÑO */
+    function setFontSize(size) {
+      document.getElementById('editor').style.fontSize = size;
+    }
+
+    function toggleMonospace() {
+      document.getElementById('editor').classList.toggle('monospace');
+    }
+
+    /* 5. ESTADÍSTICAS DEL DOCUMENTO */
+    function updateStats() {
+      const text = document.getElementById('editor').innerText.trim();
+      const words = text ? text.split(/\s+/).length : 0;
+      const chars = text.length;
+      const readTime = Math.ceil(words / 200);
+      
+      document.getElementById('statsBox').innerHTML = 
+        `Palabras: ${words}<br>Caracteres: ${chars}<br>Lectura: ~${readTime} min`;
     }
 
     function toggleExportMenu() {
@@ -582,7 +675,6 @@
       });
     }
 
-    // Inicializar estadísticas al cargar
     updateStats();
   </script>
 </body>
