@@ -648,15 +648,20 @@
     function saveData() {
       const title = document.getElementById('docTitle').innerText;
       const content = document.getElementById('editor').innerHTML;
+      const currentFont = document.getElementById('editor').className;
       localStorage.setItem('meow_doc_title', title);
       localStorage.setItem('meow_doc_content', content);
+      localStorage.setItem('meow_doc_font', currentFont);
     }
 
     function loadSavedData() {
       const savedTitle = localStorage.getItem('meow_doc_title');
       const savedContent = localStorage.getItem('meow_doc_content');
+      const savedFont = localStorage.getItem('meow_doc_font');
+      
       if (savedTitle) document.getElementById('docTitle').innerText = savedTitle;
       if (savedContent) document.getElementById('editor').innerHTML = savedContent;
+      if (savedFont) document.getElementById('editor').className = savedFont;
       updateStats();
     }
 
@@ -733,6 +738,7 @@
     function setFontFamily(className) {
       const editor = document.getElementById('editor');
       editor.className = className;
+      saveData();
     }
 
     function setFontSize(size) {
@@ -820,22 +826,38 @@
       toggleBtn.innerText = body.classList.contains('light-mode') ? '☀️' : '🌙';
     }
 
+    /* EXPORTACIÓN A PDF CORREGIDA (Hereda la tipografía exacta del editor) */
     function exportToPDF() {
       document.getElementById('exportMenu').classList.remove('show');
       const element = document.getElementById('editor');
       const title = document.getElementById('docTitle').innerText;
       
+      // Obtener la tipografía del editor en el momento de exportar
+      const computedStyle = window.getComputedStyle(element);
+      const activeFontFamily = computedStyle.fontFamily;
+      const activeFontSize = computedStyle.fontSize;
+
       const container = document.createElement('div');
-      container.style.padding = '20px';
+      container.style.padding = '30px';
       container.style.color = '#000000';
       container.style.backgroundColor = '#ffffff';
-      container.innerHTML = `<h1 style="font-family: sans-serif; text-transform: uppercase;">${title}</h1><hr/><br/>` + element.innerHTML;
+      container.style.fontFamily = activeFontFamily;
+      container.style.fontSize = activeFontSize;
+      container.style.lineHeight = '1.6';
+
+      container.innerHTML = `
+        <h1 style="font-family: 'Oswald', sans-serif; text-transform: uppercase; margin-bottom: 8px; font-size: 24px; color: #000000;">${title}</h1>
+        <hr style="border: 0; border-top: 1px solid #000000; margin-bottom: 20px;" />
+        <div style="font-family: ${activeFontFamily}; font-size: ${activeFontSize};">
+          ${element.innerHTML}
+        </div>
+      `;
 
       const opt = {
-        margin:       0.8,
-        filename:     'meow_docs.pdf',
+        margin:       0.6,
+        filename:     `${title.toLowerCase().replace(/\s+/g, '_') || 'meow_docs'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
+        html2canvas:  { scale: 2, useCORS: true },
         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
       };
       
@@ -867,7 +889,7 @@
       docx.Packer.toBlob(doc).then(blob => {
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'meow_docs.docx';
+        link.download = `${title.toLowerCase().replace(/\s+/g, '_') || 'meow_docs'}.docx`;
         link.click();
       });
     }
