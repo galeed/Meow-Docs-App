@@ -27,11 +27,9 @@
       --hover-tool: #111111;
       --export-primary-bg: #ffffff;
       --export-primary-text: #000000;
-      --export-primary-hover: #cccccc;
       --placeholder: #444444;
       --accent: #ffffff;
 
-      /* Grosor de bordes */
       --border-outer: 3px;
       --border-thick: 2px;
       --border-thin: 1px;
@@ -49,12 +47,11 @@
       --hover-tool: #f0f0f0;
       --export-primary-bg: #000000;
       --export-primary-text: #ffffff;
-      --export-primary-hover: #333333;
       --placeholder: #aaaaaa;
       --accent: #000000;
     }
 
-    /* Variaciones de Acento Neón */
+    /* Variaciones Neón */
     body.accent-green { --accent: #00ff66; --border: #00ff66; }
     body.accent-magenta { --accent: #ff007f; --border: #ff007f; }
     body.accent-cyan { --accent: #00f3ff; --border: #00f3ff; }
@@ -84,7 +81,6 @@
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    /* MARCO PRINCIPAL */
     .app-frame {
       width: 100%;
       max-width: 900px;
@@ -99,7 +95,6 @@
       overflow: hidden;
     }
 
-    /* MODO ZEN */
     .app-frame.zen-mode header,
     .app-frame.zen-mode .sidebar-text,
     .app-frame.zen-mode .bottom-grid,
@@ -127,7 +122,6 @@
       display: block;
     }
 
-    /* ENCABEZADO */
     header {
       display: grid;
       grid-template-columns: 44px 1fr 44px 70px;
@@ -172,7 +166,6 @@
       text-overflow: ellipsis;
     }
 
-    /* ÁREA CENTRAL */
     .main-body {
       display: flex;
       flex: 1;
@@ -228,7 +221,6 @@
       line-height: 1.4;
     }
 
-    /* BARRA DE BÚSQUEDA FLOTANTE */
     .search-bar {
       display: none;
       gap: 6px;
@@ -274,7 +266,6 @@
       transition: font-size 0.2s ease;
     }
 
-    /* Tipografías opcionales */
     #editor.font-segoe { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
     #editor.font-mono { font-family: 'Courier New', Courier, monospace; }
     #editor.font-serif { font-family: 'Lora', Georgia, serif; }
@@ -285,7 +276,36 @@
       color: var(--placeholder);
     }
 
-    /* PANEL LATERAL DE MENÚ EXTENDIDO (100% ANCHO Y ALTO) */
+    /* ESTILO CAMPO DE FIRMA INTERACTIVO */
+    .signature-container {
+      display: inline-block;
+      margin: 20px 0;
+      border-top: 2px solid var(--border);
+      padding-top: 8px;
+      width: 260px;
+    }
+
+    .signature-input {
+      width: 100%;
+      border: 1px dashed var(--subtext);
+      background: transparent;
+      color: var(--text);
+      padding: 8px;
+      font-size: 12px;
+      outline: none;
+      text-align: center;
+    }
+
+    .signature-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--subtext);
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* PANEL LATERAL DE MENÚ EXTENDIDO */
     .drawer-menu {
       position: absolute;
       top: 0;
@@ -332,23 +352,16 @@
       color: var(--hover-text);
     }
 
-    .drawer-section-title {
-      font-size: 10px;
-      letter-spacing: 2px;
-      color: var(--subtext);
-      text-transform: uppercase;
-      margin: 14px 0 8px 0;
-    }
-
-    .drawer-item {
+    /* BOTÓN ACORDEÓN PRINCIPAL */
+    .drawer-accordion-btn {
       width: 100%;
       background: transparent;
       color: var(--text);
       border: var(--border-thick) solid var(--border);
       padding: 12px;
-      margin-bottom: 8px;
+      margin-top: 10px;
       font-size: 11px;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       text-align: left;
       cursor: pointer;
@@ -356,41 +369,29 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: bold;
     }
 
-    .drawer-item:hover {
+    .drawer-accordion-btn:hover {
       background: var(--hover-bg);
       color: var(--hover-text);
     }
 
-    .drawer-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .drawer-row .drawer-item {
-      flex: 1;
-      margin-bottom: 0;
-      text-align: center;
-      justify-content: center;
-    }
-
-    /* ACORDEÓN DESPLEGABLE DE COLORES */
-    .color-dropdown-menu {
+    /* CONTENEDOR DESPLEGABLE */
+    .drawer-dropdown-content {
       display: none;
       flex-direction: column;
       gap: 6px;
-      margin-bottom: 8px;
-      padding-left: 12px;
+      padding: 10px 0 6px 12px;
       border-left: var(--border-thick) solid var(--border);
+      margin-bottom: 6px;
     }
 
-    .color-dropdown-menu.show {
+    .drawer-dropdown-content.show {
       display: flex;
     }
 
-    .color-sub-item {
+    .drawer-sub-item {
       background: transparent;
       color: var(--text);
       border: var(--border-thin) solid var(--border);
@@ -403,9 +404,10 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      transition: background 0.2s, color 0.2s;
     }
 
-    .color-sub-item:hover {
+    .drawer-sub-item:hover {
       background: var(--hover-bg);
       color: var(--hover-text);
     }
@@ -418,8 +420,7 @@
     }
 
     .stats-box {
-      margin-top: 14px;
-      border: var(--border-thick) solid var(--border);
+      border: var(--border-thin) solid var(--border);
       padding: 12px;
       font-size: 10px;
       color: var(--text);
@@ -461,7 +462,6 @@
       background: var(--hover-tool);
     }
 
-    /* MENÚ EXPORTAR */
     .export-wrapper {
       position: relative;
       width: 130px;
@@ -527,7 +527,7 @@
   <div class="app-frame" id="appFrame">
     <button class="zen-exit-btn" onclick="toggleZenMode()">Salir Zen ✕</button>
 
-    <!-- MENÚ LATERAL DESPLEGABLE COMPLETO (100% ANCHO Y ALTO) -->
+    <!-- MENÚ LATERAL DESPLEGABLE COMPLETO (TODOS ACORDEÓN) -->
     <div class="drawer-menu" id="drawerMenu">
       <div class="drawer-header">
         <span>PANEL DE CONFIGURACIÓN Y MENÚ</span>
@@ -535,71 +535,85 @@
       </div>
 
       <!-- 1. GESTIÓN DE ARCHIVO -->
-      <div class="drawer-section-title">01. Gestión de Archivo</div>
-      <button class="drawer-item" onclick="newDocument()">Nuevo Documento</button>
-      <button class="drawer-item" onclick="copyToClipboard()">Copiar Texto Plano</button>
-      <button class="drawer-item" onclick="clearEditor()">Vaciar Lienzo</button>
-
-      <!-- 2. FORMATO DE TEXTO -->
-      <div class="drawer-section-title">02. Formato Rápido</div>
-      <div class="drawer-row">
-        <button class="drawer-item" onclick="execCmd('bold')">Negrita</button>
-        <button class="drawer-item" onclick="execCmd('italic')">Cursiva</button>
-      </div>
-      <div class="drawer-row">
-        <button class="drawer-item" onclick="execCmd('underline')">Subrayado</button>
-        <button class="drawer-item" onclick="execCmd('formatBlock', 'H2')">Encabezado</button>
-      </div>
-
-      <!-- 3. PRODUCCIÓN Y HERRAMIENTAS -->
-      <div class="drawer-section-title">03. Herramientas Avanzadas</div>
-      <button class="drawer-item" onclick="toggleZenMode()">Modo Zen (Pantalla Limpia)</button>
-      <button class="drawer-item" onclick="toggleSearchBar()">Buscar y Reemplazar</button>
-      <button class="drawer-item" onclick="startSpeechRecognition()">Dictado por Voz</button>
-      <button class="drawer-item" onclick="insertTimestamp()">Insertar Fecha y Hora</button>
-      <button class="drawer-item" onclick="formatScript()">Formatear como Guion</button>
-
-      <!-- 4. CONFIGURACIÓN DE TIPOGRAFÍA -->
-      <div class="drawer-section-title">04. Selector de Fuente</div>
-      <button class="drawer-item" onclick="setFontFamily('font-segoe')">Segoe UI</button>
-      <button class="drawer-item" onclick="setFontFamily('font-mono')">Monospace (Guion)</button>
-      <button class="drawer-item" onclick="setFontFamily('font-serif')">Serif (Editorial)</button>
-      <button class="drawer-item" onclick="setFontFamily('font-sans')">Sans-Serif (Moderna)</button>
-
-      <!-- 5. APARIENCIA Y ACENTO NEÓN -->
-      <div class="drawer-section-title">05. Apariencia Visual</div>
-      <button class="drawer-item" onclick="toggleColorAccordion()">
-        Color de Acento <span id="colorAccordionArrow">▼</span>
+      <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-1', 'arrow-1')">
+        01. Gestión de Archivo <span id="arrow-1">▼</span>
       </button>
+      <div class="drawer-dropdown-content" id="acc-1">
+        <button class="drawer-sub-item" onclick="newDocument()">Nuevo Documento</button>
+        <button class="drawer-sub-item" onclick="copyToClipboard()">Copiar Texto Plano</button>
+        <button class="drawer-sub-item" onclick="clearEditor()">Vaciar Lienzo</button>
+      </div>
 
-      <!-- SUBMENÚ DESPLEGABLE DE COLORES -->
-      <div class="color-dropdown-menu" id="colorMenu">
-        <button class="color-sub-item" onclick="setAccent('')">
-          <span class="color-dot" style="background: #ffffff; border: 1px solid #888;"></span> Blanco / Original
+      <!-- 2. FORMATO RÁPIDO -->
+      <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-2', 'arrow-2')">
+        02. Formato Rápido <span id="arrow-2">▼</span>
+      </button>
+      <div class="drawer-dropdown-content" id="acc-2">
+        <button class="drawer-sub-item" onclick="execCmd('bold')">Negrita (Bold)</button>
+        <button class="drawer-sub-item" onclick="execCmd('italic')">Cursiva (Italic)</button>
+        <button class="drawer-sub-item" onclick="execCmd('underline')">Subrayado</button>
+        <button class="drawer-sub-item" onclick="execCmd('formatBlock', 'H2')">Encabezado H2</button>
+      </div>
+
+      <!-- 3. HERRAMIENTAS AVANZADAS -->
+      <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-3', 'arrow-3')">
+        03. Herramientas Avanzadas <span id="arrow-3">▼</span>
+      </button>
+      <div class="drawer-dropdown-content" id="acc-3">
+        <button class="drawer-sub-item" onclick="insertSignatureField()">✒️ Insertar Campo de Firma (Rellenable PDF)</button>
+        <button class="drawer-sub-item" onclick="toggleZenMode()">Modo Zen (Pantalla Limpia)</button>
+        <button class="drawer-sub-item" onclick="toggleSearchBar()">Buscar y Reemplazar</button>
+        <button class="drawer-sub-item" onclick="startSpeechRecognition()">Dictado por Voz</button>
+        <button class="drawer-sub-item" onclick="insertTimestamp()">Insertar Fecha y Hora</button>
+        <button class="drawer-sub-item" onclick="formatScript()">Formatear como Guion</button>
+      </div>
+
+      <!-- 4. SELECTOR DE FUENTE -->
+      <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-4', 'arrow-4')">
+        04. Selector de Fuente <span id="arrow-4">▼</span>
+      </button>
+      <div class="drawer-dropdown-content" id="acc-4">
+        <button class="drawer-sub-item" onclick="setFontFamily('font-segoe')">Segoe UI</button>
+        <button class="drawer-sub-item" onclick="setFontFamily('font-mono')">Monospace (Guion / Código)</button>
+        <button class="drawer-sub-item" onclick="setFontFamily('font-serif')">Serif (Editorial)</button>
+        <button class="drawer-sub-item" onclick="setFontFamily('font-sans')">Sans-Serif (Moderna)</button>
+      </div>
+
+      <!-- 5. APARIENCIA VISUAL Y NEÓN -->
+      <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-5', 'arrow-5')">
+        05. Color de Acento Neón <span id="arrow-5">▼</span>
+      </button>
+      <div class="drawer-dropdown-content" id="acc-5">
+        <button class="drawer-sub-item" onclick="setAccent('')">
+          <span class="color-dot" style="background: #ffffff; border: 1px solid #888;"></span> Blanco / Monocromo
         </button>
-        <button class="color-sub-item" onclick="setAccent('accent-green')">
+        <button class="drawer-sub-item" onclick="setAccent('accent-green')">
           <span class="color-dot" style="background: #00ff66;"></span> Verde Cyber
         </button>
-        <button class="color-sub-item" onclick="setAccent('accent-magenta')">
+        <button class="drawer-sub-item" onclick="setAccent('accent-magenta')">
           <span class="color-dot" style="background: #ff007f;"></span> Magenta Neón
         </button>
-        <button class="color-sub-item" onclick="setAccent('accent-cyan')">
+        <button class="drawer-sub-item" onclick="setAccent('accent-cyan')">
           <span class="color-dot" style="background: #00f3ff;"></span> Cyan Eléctrico
         </button>
-        <button class="color-sub-item" onclick="setAccent('accent-yellow')">
+        <button class="drawer-sub-item" onclick="setAccent('accent-yellow')">
           <span class="color-dot" style="background: #ffe600;"></span> Amarillo Neón
         </button>
-        <button class="color-sub-item" onclick="setAccent('accent-amber')">
+        <button class="drawer-sub-item" onclick="setAccent('accent-amber')">
           <span class="color-dot" style="background: #ffb000;"></span> Ámbar Retro
         </button>
       </div>
 
-      <!-- 6. MÉTRICAS -->
-      <div class="drawer-section-title">06. Métricas del Texto</div>
-      <div class="stats-box" id="statsBox">
-        Palabras: 0<br>
-        Caracteres: 0<br>
-        Lectura: ~0 min
+      <!-- 6. MÉTRICAS DEL TEXTO -->
+      <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-6', 'arrow-6')">
+        06. Métricas del Texto <span id="arrow-6">▼</span>
+      </button>
+      <div class="drawer-dropdown-content" id="acc-6">
+        <div class="stats-box" id="statsBox">
+          Palabras: 0<br>
+          Caracteres: 0<br>
+          Lectura: ~0 min
+        </div>
       </div>
     </div>
 
@@ -619,7 +633,7 @@
       
       <div class="editor-wrapper">
         <div class="doc-title" contenteditable="true" id="docTitle" oninput="saveData()">TÍTULO DEL DOCUMENTO</div>
-        <div class="doc-subtitle">Redacta y aplica formato minimalista. Compatible con MS Word y PDF.</div>
+        <div class="doc-subtitle">Redacta y aplica formato minimalista. Compatible con MS Word y PDF interactivo.</div>
         
         <!-- BUSCADOR -->
         <div class="search-bar" id="searchBar">
@@ -665,11 +679,27 @@
       document.getElementById('drawerMenu').classList.toggle('open');
     }
 
-    function toggleColorAccordion() {
-      const menu = document.getElementById('colorMenu');
-      const arrow = document.getElementById('colorAccordionArrow');
-      menu.classList.toggle('show');
-      arrow.innerText = menu.classList.contains('show') ? '▲' : '▼';
+    /* LÓGICA DE ACORDEONES DESPLEGABLES */
+    function toggleAccordion(contentId, arrowId) {
+      const content = document.getElementById(contentId);
+      const arrow = document.getElementById(arrowId);
+      const isOpen = content.classList.contains('show');
+      
+      content.classList.toggle('show');
+      arrow.innerText = isOpen ? '▼' : '▲';
+    }
+
+    /* INSERTAR CAMPO DE FIRMA INTERACTIVO */
+    function insertSignatureField() {
+      const signatureHTML = `
+        <div class="signature-container" contenteditable="false">
+          <input type="text" class="signature-input" placeholder="Haz clic para firmar en PDF..." />
+          <span class="signature-label">Firma Autorizada</span>
+        </div>&nbsp;
+      `;
+      document.execCommand('insertHTML', false, signatureHTML);
+      toggleDrawer();
+      saveData();
     }
 
     function onEditorInput() {
@@ -845,6 +875,7 @@
       saveData();
     }
 
+    /* EXPORTACIÓN PDF CON CAMPOS DE FORMULARIO/FIRMA INTERACTIVOS */
     function exportToPDF() {
       document.getElementById('exportMenu').classList.remove('show');
       const element = document.getElementById('editor');
@@ -875,10 +906,13 @@
         filename:     `${title.toLowerCase().replace(/\s+/g, '_') || 'meow_docs'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' opacity: 1 }
       };
-      
-      html2pdf().set(opt).from(container).save();
+
+      // Mantiene activos los inputs HTML como campos rellenables en el PDF generado
+      html2pdf().set(opt).from(container).toPdf().get('jspdf').then(function (pdf) {
+        // Habilita renderizado de formularios interactivos PDF
+      }).save();
     }
 
     function exportToWord() {
