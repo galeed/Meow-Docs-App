@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Meow Docs</title>
   
-  <!-- Fuentes estilo A24 -->
+  <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;700&family=Oswald:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   
   <!-- Librerías de Exportación -->
   <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
@@ -29,6 +29,7 @@
       --export-primary-text: #000000;
       --export-primary-hover: #cccccc;
       --placeholder: #444444;
+      --accent: #ffffff;
     }
 
     body.light-mode {
@@ -45,7 +46,12 @@
       --export-primary-text: #ffffff;
       --export-primary-hover: #333333;
       --placeholder: #aaaaaa;
+      --accent: #000000;
     }
+
+    /* Variaciones de Acento Neón */
+    body.accent-green { --accent: #00ff66; --border: #00ff66; }
+    body.accent-amber { --accent: #ffb000; --border: #ffb000; }
 
     * {
       box-sizing: border-box;
@@ -53,7 +59,6 @@
       padding: 0;
     }
 
-    /* BLOQUEO DE DESPLAZAMIENTO GLOBAL EN MÓVIL */
     html, body {
       height: 100vh;
       height: 100dvh;
@@ -71,7 +76,6 @@
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    /* MARCO CONTENEDOR RÍGIDO Y ESTÁTICO */
     .app-frame {
       width: 100%;
       max-width: 900px;
@@ -86,7 +90,35 @@
       overflow: hidden;
     }
 
-    /* ENCABEZADO FIJO */
+    /* MODO ZEN */
+    .app-frame.zen-mode header,
+    .app-frame.zen-mode .sidebar-text,
+    .app-frame.zen-mode .bottom-grid,
+    .app-frame.zen-mode .doc-subtitle {
+      display: none !important;
+    }
+
+    .zen-exit-btn {
+      display: none;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--app-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      z-index: 30;
+      text-transform: uppercase;
+    }
+
+    .app-frame.zen-mode .zen-exit-btn {
+      display: block;
+    }
+
+    /* ENCABEZADO */
     header {
       display: grid;
       grid-template-columns: 40px 1fr 40px 70px;
@@ -160,7 +192,6 @@
       white-space: nowrap;
     }
 
-    /* CONTENEDOR DEL EDITOR CON SCROLL INTERNO ÚNICAMENTE */
     .editor-wrapper {
       flex: 1;
       padding: 20px 16px;
@@ -184,8 +215,42 @@
     .doc-subtitle {
       font-size: 11px;
       color: var(--subtext);
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       line-height: 1.4;
+    }
+
+    /* BARRA DE BÚSQUEDA FLOTANTE */
+    .search-bar {
+      display: none;
+      gap: 6px;
+      margin-bottom: 12px;
+      background: var(--app-bg);
+      border: 1px solid var(--border);
+      padding: 6px;
+    }
+
+    .search-bar.open {
+      display: flex;
+    }
+
+    .search-input {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px;
+      font-size: 11px;
+      flex: 1;
+      outline: none;
+    }
+
+    .search-btn {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      font-size: 10px;
+      text-transform: uppercase;
+      cursor: pointer;
     }
 
     #editor {
@@ -196,13 +261,15 @@
       line-height: 1.6;
       outline: none;
       border: none;
-      font-family: inherit;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       transition: font-size 0.2s ease;
     }
 
-    #editor.monospace {
-      font-family: 'Courier New', Courier, monospace;
-    }
+    /* Tipografías opcionales */
+    #editor.font-segoe { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+    #editor.font-mono { font-family: 'Courier New', Courier, monospace; }
+    #editor.font-serif { font-family: 'Lora', Georgia, serif; }
+    #editor.font-sans { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
 
     #editor:empty:before {
       content: "Empieza a escribir tu documento...";
@@ -237,7 +304,7 @@
       align-items: center;
       border-bottom: 1px solid var(--border);
       padding-bottom: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       font-family: 'Oswald', sans-serif;
       font-size: 16px;
       letter-spacing: 1px;
@@ -291,7 +358,7 @@
     }
 
     .stats-box {
-      margin-top: auto;
+      margin-top: 12px;
       border: 1px solid var(--border);
       padding: 10px;
       font-size: 10px;
@@ -429,7 +496,9 @@
 </head>
 <body>
 
-  <div class="app-frame">
+  <div class="app-frame" id="appFrame">
+    <button class="zen-exit-btn" onclick="toggleZenMode()">Salir Zen ✕</button>
+
     <!-- MENÚ LATERAL DESPLEGABLE (☰) -->
     <div class="drawer-menu" id="drawerMenu">
       <div class="drawer-header">
@@ -437,33 +506,52 @@
         <button class="drawer-close" onclick="toggleDrawer()">✕</button>
       </div>
 
-      <!-- 1. GESTIÓN DEL DOCUMENTO -->
+      <!-- 1. GESTIÓN DE ARCHIVO -->
       <div class="drawer-section-title">01. Gestión de Archivo</div>
       <button class="drawer-item" onclick="newDocument()">Nuevo Documento</button>
       <button class="drawer-item" onclick="copyToClipboard()">Copiar Texto Plano</button>
       <button class="drawer-item" onclick="clearEditor()">Vaciar Lienzo</button>
 
-      <!-- 2. ATAJOS DE TECLADO Y AYUDA -->
-      <div class="drawer-section-title">02. Atajos Rápidos</div>
-      <button class="drawer-item" onclick="showShortcuts()">Ver Atajos de Teclado</button>
+      <!-- 2. PRODUCCIÓN Y HERRAMIENTAS -->
+      <div class="drawer-section-title">02. Producción y Herramientas</div>
+      <button class="drawer-item" onclick="toggleZenMode()">Modo Zen (Pantalla Limpia)</button>
+      <button class="drawer-item" onclick="toggleSearchBar()">Buscar y Reemplazar</button>
+      <button class="drawer-item" onclick="startSpeechRecognition()">Dictado por Voz (Micrófono)</button>
+      <button class="drawer-item" onclick="insertTimestamp()">Insertar Fecha y Hora</button>
+      <button class="drawer-item" onclick="formatScript()">Formatear como Guion</button>
 
-      <!-- 3. PLANTILLAS RÁPIDAS -->
-      <div class="drawer-section-title">03. Cargar Plantilla</div>
-      <button class="drawer-item" onclick="loadTemplate('guion')">Guion Teatral / Cine</button>
-      <button class="drawer-item" onclick="loadTemplate('nota')">Nota de Prensa</button>
-      <button class="drawer-item" onclick="loadTemplate('lista')">Lista de Tareas</button>
-
-      <!-- 4. AJUSTES DE TIPOGRAFÍA / ESTILO -->
-      <div class="drawer-section-title">04. Tamaño y Fuente</div>
-      <div class="drawer-row">
+      <!-- 3. CONFIGURACIÓN DE TIPOGRAFÍA -->
+      <div class="drawer-section-title">03. Selector de Fuente</div>
+      <button class="drawer-item" onclick="setFontFamily('font-segoe')">Segoe UI</button>
+      <button class="drawer-item" onclick="setFontFamily('font-mono')">Monospace (Guion)</button>
+      <button class="drawer-item" onclick="setFontFamily('font-serif')">Serif (Editorial)</button>
+      <button class="drawer-item" onclick="setFontFamily('font-sans')">Sans-Serif (Moderna)</button>
+      
+      <div class="drawer-row" style="margin-top: 6px;">
         <button class="drawer-item" onclick="setFontSize('12px')">P</button>
         <button class="drawer-item" onclick="setFontSize('15px')">M</button>
         <button class="drawer-item" onclick="setFontSize('18px')">G</button>
       </div>
-      <button class="drawer-item" onclick="toggleMonospace()">Alternar Fuente Mono/Sans</button>
 
-      <!-- 5. ESTADÍSTICAS DEL DOCUMENTO -->
-      <div class="drawer-section-title">05. Métricas del Texto</div>
+      <!-- 4. APARIENCIA Y NEÓN -->
+      <div class="drawer-section-title">04. Color de Acento</div>
+      <div class="drawer-row">
+        <button class="drawer-item" onclick="setAccent('')">Blanco</button>
+        <button class="drawer-item" onclick="setAccent('accent-green')">Neón</button>
+        <button class="drawer-item" onclick="setAccent('accent-amber')">Ámbar</button>
+      </div>
+
+      <!-- 5. ATAJOS DE TECLADO -->
+      <div class="drawer-section-title">05. Atajos Rápidos</div>
+      <button class="drawer-item" onclick="showShortcuts()">Ver Atajos de Teclado</button>
+
+      <!-- 6. PLANTILLAS -->
+      <div class="drawer-section-title">06. Cargar Plantillas</div>
+      <button class="drawer-item" onclick="loadTemplate('guion')">Guion Teatral / Cine</button>
+      <button class="drawer-item" onclick="loadTemplate('nota')">Nota de Prensa</button>
+
+      <!-- 7. MÉTRICAS -->
+      <div class="drawer-section-title">07. Métricas del Texto</div>
       <div class="stats-box" id="statsBox">
         Palabras: 0<br>
         Caracteres: 0<br>
@@ -486,10 +574,17 @@
       </div>
       
       <div class="editor-wrapper">
-        <div class="doc-title" contenteditable="true">TÍTULO DEL DOCUMENTO</div>
+        <div class="doc-title" contenteditable="true" id="docTitle" oninput="saveData()">TÍTULO DEL DOCUMENTO</div>
         <div class="doc-subtitle">Redacta y aplica formato minimalista. Compatible con MS Word y PDF.</div>
         
-        <div id="editor" contenteditable="true" oninput="updateStats()">
+        <!-- BUSCADOR -->
+        <div class="search-bar" id="searchBar">
+          <input type="text" id="findText" class="search-input" placeholder="Buscar...">
+          <input type="text" id="replaceText" class="search-input" placeholder="Reemplazar con...">
+          <button class="search-btn" onclick="executeReplace()">OK</button>
+        </div>
+
+        <div id="editor" contenteditable="true" oninput="onEditorInput()">
           Escribe aquí el contenido principal de tu guion, nota o documento...
         </div>
       </div>
@@ -536,11 +631,126 @@
       document.getElementById('drawerMenu').classList.toggle('open');
     }
 
-    /* 1. GESTIÓN DE DOCUMENTO */
+    function onEditorInput() {
+      updateStats();
+      saveData();
+    }
+
+    /* MODO ZEN */
+    function toggleZenMode() {
+      document.getElementById('appFrame').classList.toggle('zen-mode');
+      if (document.getElementById('drawerMenu').classList.contains('open')) {
+        toggleDrawer();
+      }
+    }
+
+    /* AUTO-GUARDADO (LocalStorage) */
+    function saveData() {
+      const title = document.getElementById('docTitle').innerText;
+      const content = document.getElementById('editor').innerHTML;
+      localStorage.setItem('meow_doc_title', title);
+      localStorage.setItem('meow_doc_content', content);
+    }
+
+    function loadSavedData() {
+      const savedTitle = localStorage.getItem('meow_doc_title');
+      const savedContent = localStorage.getItem('meow_doc_content');
+      if (savedTitle) document.getElementById('docTitle').innerText = savedTitle;
+      if (savedContent) document.getElementById('editor').innerHTML = savedContent;
+      updateStats();
+    }
+
+    /* BUSCAR Y REEMPLAZAR */
+    function toggleSearchBar() {
+      document.getElementById('searchBar').classList.toggle('open');
+      toggleDrawer();
+    }
+
+    function executeReplace() {
+      const findVal = document.getElementById('findText').value;
+      const replaceVal = document.getElementById('replaceText').value;
+      if (!findVal) return;
+
+      const editor = document.getElementById('editor');
+      const regex = new RegExp(findVal, 'g');
+      editor.innerHTML = editor.innerHTML.replace(regex, replaceVal);
+      saveData();
+      alert('Reemplazo completado');
+    }
+
+    /* DICTADO POR VOZ */
+    function startSpeechRecognition() {
+      toggleDrawer();
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert("Tu navegador no soporta dictado por voz.");
+        return;
+      }
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'es-MX';
+      recognition.interimResults = false;
+
+      recognition.onstart = function() {
+        alert("Escuchando... Habla ahora.");
+      };
+
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.execCommand('insertText', false, transcript + " ");
+        saveData();
+      };
+
+      recognition.start();
+    }
+
+    /* INSERTAR FECHA/HORA */
+    function insertTimestamp() {
+      const now = new Date();
+      const timestamp = `[${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}] `;
+      document.execCommand('insertText', false, timestamp);
+      toggleDrawer();
+      saveData();
+    }
+
+    /* MODO GUION */
+    function formatScript() {
+      setFontFamily('font-mono');
+      const editor = document.getElementById('editor');
+      const lines = editor.innerText.split('\n');
+      const formatted = lines.map(line => {
+        const trimmed = line.trim();
+        if (trimmed === trimmed.toUpperCase() && trimmed.length > 2 && !trimmed.startsWith('ESCENA')) {
+          return `<div style="text-align: center; margin-top: 12px; font-weight: bold;">${trimmed}</div>`;
+        }
+        return `<div>${line}</div>`;
+      }).join('');
+      editor.innerHTML = formatted;
+      toggleDrawer();
+      saveData();
+    }
+
+    /* SELECTOR DE FUENTES */
+    function setFontFamily(className) {
+      const editor = document.getElementById('editor');
+      editor.className = className;
+    }
+
+    function setFontSize(size) {
+      document.getElementById('editor').style.fontSize = size;
+    }
+
+    /* COLOR DE ACENTO */
+    function setAccent(accentClass) {
+      document.body.classList.remove('accent-green', 'accent-amber');
+      if (accentClass) document.body.classList.add(accentClass);
+    }
+
+    /* GESTIÓN DE DOCUMENTO */
     function newDocument() {
       if (confirm("¿Deseas crear un nuevo documento? Se limpiará el espacio actual.")) {
-        document.querySelector('.doc-title').innerText = "TÍTULO DEL DOCUMENTO";
+        document.getElementById('docTitle').innerText = "TÍTULO DEL DOCUMENTO";
         document.getElementById('editor').innerHTML = "";
+        saveData();
         updateStats();
         toggleDrawer();
       }
@@ -549,6 +759,7 @@
     function clearEditor() {
       if (confirm("¿Vaciar todo el contenido del lienzo?")) {
         document.getElementById('editor').innerHTML = "";
+        saveData();
         updateStats();
         toggleDrawer();
       }
@@ -561,15 +772,13 @@
       toggleDrawer();
     }
 
-    /* 2. ATAJOS DE TECLADO */
     function showShortcuts() {
       alert("Atajos del Teclado:\n\n• Ctrl + B: Negrita\n• Ctrl + I: Cursiva\n• Ctrl + U: Subrayado\n• Ctrl + Z: Deshacer");
     }
 
-    /* 3. PLANTILLAS RÁPIDAS */
     function loadTemplate(type) {
       const editor = document.getElementById('editor');
-      const title = document.querySelector('.doc-title');
+      const title = document.getElementById('docTitle');
       
       if (type === 'guion') {
         title.innerText = "ESCENA 01 - INTERIOR / NOCHE";
@@ -577,24 +786,12 @@
       } else if (type === 'nota') {
         title.innerText = "COMUNICADO DE PRENSA";
         editor.innerHTML = "<b>CIUDAD DE MÉXICO</b> — Escribe el cuerpo de la nota o comunicado oficial aquí manteniendo un tono sobrio y estructurado.";
-      } else if (type === 'lista') {
-        title.innerText = "LISTA DE CONTROL / TAREAS";
-        editor.innerHTML = "<ul><li>Primera tarea prioritaria</li><li>Segunda revisión técnica</li><li>Entregable final</li></ul>";
       }
+      saveData();
       updateStats();
       toggleDrawer();
     }
 
-    /* 4. AJUSTES DE TIPOGRAFÍA Y TAMAÑO */
-    function setFontSize(size) {
-      document.getElementById('editor').style.fontSize = size;
-    }
-
-    function toggleMonospace() {
-      document.getElementById('editor').classList.toggle('monospace');
-    }
-
-    /* 5. ESTADÍSTICAS DEL DOCUMENTO */
     function updateStats() {
       const text = document.getElementById('editor').innerText.trim();
       const words = text ? text.split(/\s+/).length : 0;
@@ -626,7 +823,7 @@
     function exportToPDF() {
       document.getElementById('exportMenu').classList.remove('show');
       const element = document.getElementById('editor');
-      const title = document.querySelector('.doc-title').innerText;
+      const title = document.getElementById('docTitle').innerText;
       
       const container = document.createElement('div');
       container.style.padding = '20px';
@@ -648,7 +845,7 @@
     function exportToWord() {
       document.getElementById('exportMenu').classList.remove('show');
       const content = document.getElementById('editor').innerText;
-      const title = document.querySelector('.doc-title').innerText;
+      const title = document.getElementById('docTitle').innerText;
 
       const doc = new docx.Document({
         sections: [{
@@ -675,7 +872,8 @@
       });
     }
 
-    updateStats();
+    // Inicializar guardado previo
+    loadSavedData();
   </script>
 </body>
 </html>
