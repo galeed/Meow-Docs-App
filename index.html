@@ -266,17 +266,17 @@
       transition: font-size 0.2s ease;
     }
 
+    #editor.font-helvetica { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
     #editor.font-segoe { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
     #editor.font-mono { font-family: 'Courier New', Courier, monospace; }
     #editor.font-serif { font-family: 'Lora', Georgia, serif; }
-    #editor.font-sans { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+    #editor.font-sans { font-family: Arial, sans-serif; }
 
     #editor:empty:before {
       content: "Empieza a escribir tu documento...";
       color: var(--placeholder);
     }
 
-    /* ESTILO REFORZADO DEL CAMPO DE FIRMA */
     .signature-container {
       display: block;
       margin: 24px 0 12px 0;
@@ -553,12 +553,46 @@
         <button class="drawer-sub-item" onclick="execCmd('formatBlock', 'H2')">Encabezado H2</button>
       </div>
 
-      <!-- 3. HERRAMIENTAS AVANZADAS -->
+      <!-- 3. ALINEACIÓN DE TEXTO -->
+      <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-align', 'arrow-align')">
+        03. Alineación de Texto <span id="arrow-align">▼</span>
+      </button>
+      <div class="drawer-dropdown-content" id="acc-align">
+        <button class="drawer-sub-item" onclick="execCmd('justifyLeft')">Alinear a la Izquierda</button>
+        <button class="drawer-sub-item" onclick="execCmd('justifyCenter')">Centrar</button>
+        <button class="drawer-sub-item" onclick="execCmd('justifyRight')">Alinear a la Derecha</button>
+        <button class="drawer-sub-item" onclick="execCmd('justifyFull')">Justificar Texto</button>
+      </div>
+
+      <!-- 4. TAMAÑO DE LETRA -->
+      <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-size', 'arrow-size')">
+        04. Tamaño de Letra <span id="arrow-size">▼</span>
+      </button>
+      <div class="drawer-dropdown-content" id="acc-size">
+        <button class="drawer-sub-item" onclick="execCmd('fontSize', '2')">Pequeño</button>
+        <button class="drawer-sub-item" onclick="execCmd('fontSize', '3')">Normal</button>
+        <button class="drawer-sub-item" onclick="execCmd('fontSize', '5')">Grande</button>
+        <button class="drawer-sub-item" onclick="execCmd('fontSize', '7')">Encabezado Grande</button>
+      </div>
+
+      <!-- 5. SELECTOR DE FUENTE -->
+      <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-4', 'arrow-4')">
+        05. Selector de Fuente <span id="arrow-4">▼</span>
+      </button>
+      <div class="drawer-dropdown-content" id="acc-4">
+        <button class="drawer-sub-item" onclick="setFontFamily('font-helvetica')">Helvetica / Helvetica Neue</button>
+        <button class="drawer-sub-item" onclick="setFontFamily('font-segoe')">Segoe UI</button>
+        <button class="drawer-sub-item" onclick="setFontFamily('font-mono')">Monospace (Guion / Código)</button>
+        <button class="drawer-sub-item" onclick="setFontFamily('font-serif')">Serif (Editorial)</button>
+        <button class="drawer-sub-item" onclick="setFontFamily('font-sans')">Sans-Serif (Estándar)</button>
+      </div>
+
+      <!-- 6. HERRAMIENTAS AVANZADAS -->
       <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-3', 'arrow-3')">
-        03. Herramientas Avanzadas <span id="arrow-3">▼</span>
+        06. Herramientas Avanzadas <span id="arrow-3">▼</span>
       </button>
       <div class="drawer-dropdown-content" id="acc-3">
-        <button class="drawer-sub-item" onclick="insertSignatureField()">✒️ Insertar Campo de Firma (Rellenable PDF)</button>
+        <button class="drawer-sub-item" onclick="insertSignatureField()">✒️ Insertar Campo de Firma</button>
         <button class="drawer-sub-item" onclick="toggleZenMode()">Modo Zen (Pantalla Limpia)</button>
         <button class="drawer-sub-item" onclick="toggleSearchBar()">Buscar y Reemplazar</button>
         <button class="drawer-sub-item" onclick="startSpeechRecognition()">Dictado por Voz</button>
@@ -566,20 +600,9 @@
         <button class="drawer-sub-item" onclick="formatScript()">Formatear como Guion</button>
       </div>
 
-      <!-- 4. SELECTOR DE FUENTE -->
-      <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-4', 'arrow-4')">
-        04. Selector de Fuente <span id="arrow-4">▼</span>
-      </button>
-      <div class="drawer-dropdown-content" id="acc-4">
-        <button class="drawer-sub-item" onclick="setFontFamily('font-segoe')">Segoe UI</button>
-        <button class="drawer-sub-item" onclick="setFontFamily('font-mono')">Monospace (Guion / Código)</button>
-        <button class="drawer-sub-item" onclick="setFontFamily('font-serif')">Serif (Editorial)</button>
-        <button class="drawer-sub-item" onclick="setFontFamily('font-sans')">Sans-Serif (Moderna)</button>
-      </div>
-
-      <!-- 5. APARIENCIA VISUAL Y NEÓN -->
+      <!-- 7. APARIENCIA VISUAL Y NEÓN -->
       <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-5', 'arrow-5')">
-        05. Color de Acento Neón <span id="arrow-5">▼</span>
+        07. Color de Acento Neón <span id="arrow-5">▼</span>
       </button>
       <div class="drawer-dropdown-content" id="acc-5">
         <button class="drawer-sub-item" onclick="setAccent('')">
@@ -602,9 +625,9 @@
         </button>
       </div>
 
-      <!-- 6. MÉTRICAS DEL TEXTO -->
+      <!-- 8. MÉTRICAS DEL TEXTO -->
       <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-6', 'arrow-6')">
-        06. Métricas del Texto <span id="arrow-6">▼</span>
+        08. Métricas del Texto <span id="arrow-6">▼</span>
       </button>
       <div class="drawer-dropdown-content" id="acc-6">
         <div class="stats-box" id="statsBox">
@@ -652,8 +675,10 @@
         <button class="tool-btn-compact" onclick="execCmd('bold')"><b>B</b></button>
         <button class="tool-btn-compact" onclick="execCmd('italic')"><i>I</i></button>
         <button class="tool-btn-compact" onclick="execCmd('underline')"><u>U</u></button>
-        <button class="tool-btn-compact" onclick="execCmd('formatBlock', 'H2')">H2</button>
-        <button class="tool-btn-compact" onclick="execCmd('insertUnorderedList')">• Lista</button>
+        <button class="tool-btn-compact" onclick="execCmd('justifyLeft')">←</button>
+        <button class="tool-btn-compact" onclick="execCmd('justifyCenter')">↔</button>
+        <button class="tool-btn-compact" onclick="execCmd('justifyRight')">→</button>
+        <button class="tool-btn-compact" onclick="execCmd('justifyFull')">≡</button>
       </div>
 
       <div class="export-wrapper">
@@ -671,6 +696,7 @@
   <script>
     function execCmd(command, value = null) {
       document.execCommand(command, false, value);
+      saveData();
     }
 
     function toggleDrawer() {
@@ -686,7 +712,6 @@
       arrow.innerText = isOpen ? '▼' : '▲';
     }
 
-    /* INSERCIÓN MEJORADA Y DIRECTA DEL CAMPO DE FIRMA */
     function insertSignatureField() {
       const editor = document.getElementById('editor');
       const signatureHTML = `
