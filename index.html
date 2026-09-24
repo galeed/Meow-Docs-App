@@ -206,6 +206,7 @@
       overflow-y: auto;
       min-width: 0;
       position: relative;
+      scroll-behavior: smooth;
     }
 
     .doc-title {
@@ -226,16 +227,17 @@
       line-height: 1.4;
     }
 
-    .search-bar {
+    .search-bar, .prompter-bar {
       display: none;
       gap: 6px;
       margin-bottom: 12px;
       background: var(--app-bg);
       border: var(--border-thick) solid var(--border);
       padding: 6px;
+      align-items: center;
     }
 
-    .search-bar.open {
+    .search-bar.open, .prompter-bar.open {
       display: flex;
     }
 
@@ -292,6 +294,22 @@
       color: var(--placeholder);
     }
 
+    .highlight-text {
+      background-color: var(--accent);
+      color: #000000;
+      padding: 2px 4px;
+    }
+
+    .code-block {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-left: 3px solid var(--accent);
+      font-family: monospace;
+      padding: 8px 12px;
+      margin: 8px 0;
+      display: block;
+      white-space: pre-wrap;
+    }
+
     .signature-container {
       display: block;
       margin: 24px 0 12px 0;
@@ -321,7 +339,6 @@
       display: block;
     }
 
-    /* BARRA DE ESTADO / FOOTER INTERNO */
     .status-bar {
       display: flex;
       justify-content: space-between;
@@ -335,7 +352,23 @@
       background: var(--app-bg);
     }
 
-    /* PANEL LATERAL DE MENÚ EXTENDIDO */
+    .progress-bar-container {
+      width: 80px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid var(--border);
+      display: inline-block;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
     .drawer-menu {
       position: absolute;
       top: 0;
@@ -442,7 +475,6 @@
       color: var(--hover-text);
     }
 
-    /* GitHub Link Item */
     .github-link-item {
       margin-top: 16px;
       border: var(--border-thick) solid var(--border);
@@ -564,7 +596,6 @@
       border-bottom: none;
     }
 
-    /* MODO IMPRESIÓN */
     @media print {
       body {
         background: #ffffff !important;
@@ -576,7 +607,7 @@
         max-width: 100% !important;
         max-height: 100% !important;
       }
-      header, .sidebar-text, .bottom-grid, .drawer-menu, .zen-exit-btn, .status-bar, .doc-subtitle, .search-bar {
+      header, .sidebar-text, .bottom-grid, .drawer-menu, .zen-exit-btn, .status-bar, .doc-subtitle, .search-bar, .prompter-bar {
         display: none !important;
       }
       .editor-wrapper {
@@ -640,15 +671,28 @@
         <button class="drawer-sub-item" onclick="execCmd('bold')">Negrita (Bold)</button>
         <button class="drawer-sub-item" onclick="execCmd('italic')">Cursiva (Italic)</button>
         <button class="drawer-sub-item" onclick="execCmd('underline')">Subrayado</button>
+        <button class="drawer-sub-item" onclick="highlightSelection()">Resaltar Neón</button>
+        <button class="drawer-sub-item" onclick="insertCodeBlock()">Bloque de Código</button>
         <button class="drawer-sub-item" onclick="execCmd('justifyLeft')">Alinear Izquierda</button>
         <button class="drawer-sub-item" onclick="execCmd('justifyCenter')">Centrar</button>
         <button class="drawer-sub-item" onclick="execCmd('justifyRight')">Alinear Derecha</button>
         <button class="drawer-sub-item" onclick="execCmd('justifyFull')">Justificar Texto</button>
       </div>
 
-      <!-- 5. TIPOGRAFÍA Y DISEÑO DE PÁRRAFO -->
+      <!-- 5. ENFOQUE, AMBIENTE Y PRODUCTIVIDAD -->
+      <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-prod', 'arrow-prod')">
+        05. Enfoque y Audio Ambient <span id="arrow-prod">▼</span>
+      </button>
+      <div class="drawer-dropdown-content" id="acc-prod">
+        <button class="drawer-sub-item" onclick="togglePomodoro()">⏱️ Pomodoro: <span id="pomoStatus">OFF</span></button>
+        <button class="drawer-sub-item" onclick="toggleAmbientNoise()">🌧️ Ruido de Lluvia Ambient: <span id="noiseStatus">OFF</span></button>
+        <button class="drawer-sub-item" onclick="setWordGoal()">🎯 Fijar Meta de Palabras</button>
+        <button class="drawer-sub-item" onclick="togglePrompterBar()">📺 Modo Teleprompter</button>
+      </div>
+
+      <!-- 6. TIPOGRAFÍA Y DISEÑO DE PÁRRAFO -->
       <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-4', 'arrow-4')">
-        05. Tipografía y Párrafo <span id="arrow-4">▼</span>
+        06. Tipografía y Párrafo <span id="arrow-4">▼</span>
       </button>
       <div class="drawer-dropdown-content" id="acc-4">
         <button class="drawer-sub-item" onclick="setFontFamily('font-oswald')">Fuente: Oswald (Título)</button>
@@ -661,9 +705,9 @@
         <button class="drawer-sub-item" onclick="setLineHeight('2.0')">Interlineado: Doble (2.0)</button>
       </div>
 
-      <!-- 6. HERRAMIENTAS Y MODO AUDIO/VISTA -->
+      <!-- 7. HERRAMIENTAS Y MODO AUDIO/VISTA -->
       <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-3', 'arrow-3')">
-        06. Herramientas Avanzadas <span id="arrow-3">▼</span>
+        07. Herramientas Avanzadas <span id="arrow-3">▼</span>
       </button>
       <div class="drawer-dropdown-content" id="acc-3">
         <button class="drawer-sub-item" onclick="toggleSoundFX()">🔊 Sonido Teclado: <span id="soundStatus">OFF</span></button>
@@ -677,9 +721,9 @@
         <button class="drawer-sub-item" onclick="formatScript()">🎬 Formatear como Guion</button>
       </div>
 
-      <!-- 7. COLOR Y ACENTO NEÓN -->
+      <!-- 8. COLOR Y ACENTO NEÓN -->
       <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-5', 'arrow-5')">
-        07. Color Neón Acento <span id="arrow-5">▼</span>
+        08. Color Neón Acento <span id="arrow-5">▼</span>
       </button>
       <div class="drawer-dropdown-content" id="acc-5">
         <button class="drawer-sub-item" onclick="setAccent('')"><span class="color-dot" style="background:#fff; border:1px solid #888;"></span> Monocromo</button>
@@ -689,9 +733,9 @@
         <button class="drawer-sub-item" onclick="setAccent('accent-yellow')"><span class="color-dot" style="background:#ffe600;"></span> Amarillo Neón</button>
       </div>
 
-      <!-- 8. MÉTRICAS DEL TEXTO -->
+      <!-- 9. MÉTRICAS DEL TEXTO -->
       <button class="drawer-accordion-btn" onclick="toggleAccordion('acc-6', 'arrow-6')">
-        08. Métricas del Texto <span id="arrow-6">▼</span>
+        09. Métricas del Texto <span id="arrow-6">▼</span>
       </button>
       <div class="drawer-dropdown-content" id="acc-6">
         <div class="stats-box" id="statsBox">
@@ -699,7 +743,7 @@
         </div>
       </div>
 
-      <!-- ENLACE A CÓDIGO FUENTE DE GITHUB EN EL PANEL -->
+      <!-- ENLACE A CÓDIGO FUENTE DE GITHUB -->
       <a href="https://github.com/galeed/Meow-Docs-App" target="_blank" class="drawer-sub-item github-link-item">
         <span>CÓDIGO FUENTE EN GITHUB</span>
         <svg class="github-icon" viewBox="0 0 24 24">
@@ -734,15 +778,28 @@
           <button class="search-btn" onclick="executeReplace()">OK</button>
         </div>
 
-        <div id="editor" contenteditable="true" oninput="onEditorInput()" onkeyup="handleMarkdownShortcuts(event)" onkeydown="playKeySound()">
+        <!-- BARRA TELEPROMPTER -->
+        <div class="prompter-bar" id="prompterBar">
+          <span style="font-size:10px;">TELEPROMPTER:</span>
+          <button class="search-btn" onclick="togglePrompterScroll()">PLAY / PAUSA</button>
+          <label style="font-size:10px;">Velocidad:</label>
+          <input type="range" id="prompterSpeed" min="1" max="10" value="3" style="width:80px;">
+        </div>
+
+        <div id="editor" contenteditable="true" oninput="onEditorInput()" onkeyup="handleMarkdownShortcuts(event)" onkeydown="handleKeyDown(event)">
           Escribe aquí el contenido principal de tu guion, nota o documento...
         </div>
       </div>
     </div>
 
-    <!-- BARRA DE ESTADO / AUTOGUARDADO -->
+    <!-- BARRA DE ESTADO / AUTOGUARDADO / PRODUCTIVIDAD -->
     <div class="status-bar">
       <span id="saveStatus">Guardado Local</span>
+      <span id="pomoDisplay" style="display:none; color:var(--accent);">🍅 25:00</span>
+      <span>
+        <span id="goalText">Meta: 0%</span>
+        <div class="progress-bar-container"><div class="progress-bar-fill" id="goalBarFill"></div></div>
+      </span>
       <span id="activeDocName">Doc: Sin Título</span>
     </div>
 
@@ -752,6 +809,7 @@
         <button class="tool-btn-compact" onclick="execCmd('bold')"><b>B</b></button>
         <button class="tool-btn-compact" onclick="execCmd('italic')"><i>I</i></button>
         <button class="tool-btn-compact" onclick="execCmd('underline')"><u>U</u></button>
+        <button class="tool-btn-compact" onclick="highlightSelection()">🖍️</button>
         <button class="tool-btn-compact" onclick="execCmd('justifyLeft')">←</button>
         <button class="tool-btn-compact" onclick="execCmd('justifyCenter')">↔</button>
         <button class="tool-btn-compact" onclick="execCmd('justifyRight')">→</button>
@@ -773,10 +831,22 @@
   </div>
 
   <script>
-    // --- ESTADO GLOBAL & GESTOR DE DOCUMENTOS ---
+    // --- ESTADO GLOBAL ---
     let currentDocId = 'doc_' + Date.now();
     let audioCtx = null;
     let soundEnabled = false;
+    let noiseNode = null;
+    let noiseGain = null;
+    let isNoisePlaying = false;
+
+    let prompterInterval = null;
+    let isPrompterActive = false;
+
+    let pomoTimer = null;
+    let pomoSeconds = 1500;
+    let isPomoRunning = false;
+
+    let wordGoal = 0;
 
     function initMultiDocStore() {
       let docsIndex = JSON.parse(localStorage.getItem('meow_docs_index') || '[]');
@@ -867,27 +937,169 @@
       }
     }
 
-    // --- EFECTOS SONOROS (WEB AUDIO API) ---
-    function toggleSoundFX() {
-      soundEnabled = !soundEnabled;
-      document.getElementById('soundStatus').innerText = soundEnabled ? 'ON' : 'OFF';
-      if (soundEnabled && !audioCtx) {
+    // --- EFECTOS SONOROS Y AUDIO SINTETIZADO ---
+    function initAudio() {
+      if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
     }
 
-    function playKeySound() {
-      if (!soundEnabled || !audioCtx) return;
+    function toggleSoundFX() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('soundStatus').innerText = soundEnabled ? 'ON' : 'OFF';
+      if (soundEnabled) initAudio();
+    }
+
+    function handleKeyDown(e) {
+      playKeySound(e.key === 'Enter');
+      handleMarkdownShortcuts(e);
+    }
+
+    function playKeySound(isEnter = false) {
+      if (!soundEnabled) return;
+      initAudio();
+
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(120 + Math.random() * 40, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+
+      if (isEnter) {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+      } else {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(120 + Math.random() * 40, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+      }
+
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start();
-      osc.stop(audioCtx.currentTime + 0.05);
+      osc.stop(audioCtx.currentTime + (isEnter ? 0.15 : 0.04));
+    }
+
+    // SINTETIZADOR DE RUIDO DE LLUVIAR/AMBIENTE
+    function toggleAmbientNoise() {
+      initAudio();
+      const statusEl = document.getElementById('noiseStatus');
+
+      if (isNoisePlaying) {
+        if (noiseGain) noiseGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+        setTimeout(() => { if (noiseNode) noiseNode.disconnect(); }, 500);
+        isNoisePlaying = false;
+        statusEl.innerText = 'OFF';
+      } else {
+        const bufferSize = audioCtx.sampleRate * 2;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let lastOut = 0.0;
+
+        for (let i = 0; i < bufferSize; i++) {
+          let white = Math.random() * 2 - 1;
+          data[i] = (lastOut + (0.02 * white)) / 1.02;
+          lastOut = data[i];
+          data[i] *= 3.5;
+        }
+
+        noiseNode = audioCtx.createBufferSource();
+        noiseNode.buffer = buffer;
+        noiseNode.loop = true;
+
+        noiseGain = audioCtx.createGain();
+        noiseGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+
+        noiseNode.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
+        noiseNode.start();
+
+        isNoisePlaying = true;
+        statusEl.innerText = 'ON';
+      }
+      toggleDrawer();
+    }
+
+    // --- TELEPROMPTER ---
+    function togglePrompterBar() {
+      document.getElementById('prompterBar').classList.toggle('open');
+      toggleDrawer();
+    }
+
+    function togglePrompterScroll() {
+      const wrapper = document.getElementById('editorWrapper');
+      if (isPrompterActive) {
+        clearInterval(prompterInterval);
+        isPrompterActive = false;
+      } else {
+        isPrompterActive = true;
+        prompterInterval = setInterval(() => {
+          const speed = parseInt(document.getElementById('prompterSpeed').value, 10);
+          wrapper.scrollTop += speed;
+        }, 50);
+      }
+    }
+
+    // --- POMODORO ---
+    function togglePomodoro() {
+      const pomoDisplay = document.getElementById('pomoDisplay');
+      const pomoStatus = document.getElementById('pomoStatus');
+
+      if (isPomoRunning) {
+        clearInterval(pomoTimer);
+        isPomoRunning = false;
+        pomoDisplay.style.display = 'none';
+        pomoStatus.innerText = 'OFF';
+      } else {
+        isPomoRunning = true;
+        pomoSeconds = 1500;
+        pomoDisplay.style.display = 'inline';
+        pomoStatus.innerText = 'ON';
+
+        pomoTimer = setInterval(() => {
+          pomoSeconds--;
+          let m = Math.floor(pomoSeconds / 60);
+          let s = pomoSeconds % 60;
+          pomoDisplay.innerText = `🍅 ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+
+          if (pomoSeconds <= 0) {
+            clearInterval(pomoTimer);
+            alert("🍅 ¡Pomodoro completado! Tómate un descanso.");
+            isPomoRunning = false;
+            pomoDisplay.style.display = 'none';
+          }
+        }, 1000);
+      }
+      toggleDrawer();
+    }
+
+    // --- META DE PALABRAS ---
+    function setWordGoal() {
+      const input = prompt("Introduce tu objetivo de palabras para este documento:", "500");
+      if (input !== null) {
+        wordGoal = parseInt(input, 10) || 0;
+        updateStats();
+      }
+      toggleDrawer();
+    }
+
+    // --- RESALTADOR Y CÓDIGO ---
+    function highlightSelection() {
+      const sel = window.getSelection();
+      if (!sel.rangeCount || sel.isCollapsed) return;
+      
+      const span = document.createElement('span');
+      span.className = 'highlight-text';
+      const range = sel.getRangeAt(0);
+      range.surroundContents(span);
+      saveData();
+    }
+
+    function insertCodeBlock() {
+      const codeHTML = `<div class="code-block" contenteditable="true">// Escribe tu código o nota aquí</div><p></p>`;
+      document.execCommand('insertHTML', false, codeHTML);
+      saveData();
+      toggleDrawer();
     }
 
     // --- PLANTILLAS ---
@@ -903,7 +1115,7 @@
           <p>Ciudad de México, a 24 de septiembre de 2026.</p>
           <p><b>A QUIEN CORRESPONDA:</b></p>
           <p>Por medio de la presente, recomiendo ampliamente a <b>Ben Oni Galeed León Hernández</b>, a quien conozco desde hace años por motivos personales y profesionales.</p>
-          <p>Durante este tiempo, he podido me constatar que es una persona honesta, responsable, trabajadora y con excelentes valores éticos. Es alguien confiable y comprometido con sus deberes.</p>
+          <p>Durante este tiempo, he podido constatar que es una persona honesta, responsable, trabajadora y con excelentes valores éticos. Es alguien confiable y comprometido con sus deberes.</p>
           <p>Quedo a su disposición para cualquier duda o aclaración.</p>
           <div class="signature-container" contenteditable="false">
             <input type="text" class="signature-input" placeholder="Haz clic para firmar..." />
@@ -936,7 +1148,6 @@
       toggleDrawer();
     }
 
-    // --- ATAJOS MARKDOWN Y PÁRRAFO ---
     function handleMarkdownShortcuts(e) {
       if (e.key === 'Enter' || e.key === ' ') {
         const selection = window.getSelection();
@@ -969,7 +1180,6 @@
       window.print();
     }
 
-    // --- IMPORTACIÓN Y EXPORTACIÓN EXTENDIDA ---
     function triggerImportFile() {
       document.getElementById('fileImportInput').click();
     }
@@ -1015,7 +1225,6 @@
       link.click();
     }
 
-    // --- FUNCIONES BASE ---
     function execCmd(command, value = null) {
       document.execCommand(command, false, value);
       saveData();
@@ -1069,6 +1278,7 @@
       localStorage.setItem(`${currentDocId}_content`, content);
       localStorage.setItem(`${currentDocId}_font`, currentFont);
       localStorage.setItem('meow_doc_accent', activeAccent);
+      localStorage.setItem(`${currentDocId}_goal`, wordGoal);
 
       const now = new Date();
       const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
@@ -1081,6 +1291,7 @@
       const savedContent = localStorage.getItem(`${currentDocId}_content`);
       const savedFont = localStorage.getItem(`${currentDocId}_font`);
       const savedAccent = localStorage.getItem('meow_doc_accent');
+      wordGoal = parseInt(localStorage.getItem(`${currentDocId}_goal`) || '0', 10);
       
       document.getElementById('docTitle').innerText = savedTitle || "TÍTULO DEL DOCUMENTO";
       document.getElementById('editor').innerHTML = savedContent || "";
@@ -1192,9 +1403,19 @@
       const words = text ? text.split(/\s+/).length : 0;
       const chars = text.length;
       const readTime = Math.ceil(words / 200);
-      
+
       document.getElementById('statsBox').innerHTML = 
         `Palabras: ${words}<br>Caracteres: ${chars}<br>Lectura: ~${readTime} min`;
+
+      // Actualizar progreso de meta de palabras
+      if (wordGoal > 0) {
+        const pct = Math.min(Math.round((words / wordGoal) * 100), 100);
+        document.getElementById('goalText').innerText = `Meta: ${pct}%`;
+        document.getElementById('goalBarFill').style.width = `${pct}%`;
+      } else {
+        document.getElementById('goalText').innerText = `Meta: N/A`;
+        document.getElementById('goalBarFill').style.width = `0%`;
+      }
     }
 
     function toggleExportMenu() {
