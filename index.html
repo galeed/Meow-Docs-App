@@ -527,7 +527,7 @@
   <div class="app-frame" id="appFrame">
     <button class="zen-exit-btn" onclick="toggleZenMode()">Salir Zen ✕</button>
 
-    <!-- MENÚ LATERAL DESPLEGABLE COMPLETO (TODOS ACORDEÓN) -->
+    <!-- MENÚ LATERAL DESPLEGABLE COMPLETO -->
     <div class="drawer-menu" id="drawerMenu">
       <div class="drawer-header">
         <span>PANEL DE CONFIGURACIÓN Y MENÚ</span>
@@ -679,7 +679,6 @@
       document.getElementById('drawerMenu').classList.toggle('open');
     }
 
-    /* LÓGICA DE ACORDEONES DESPLEGABLES */
     function toggleAccordion(contentId, arrowId) {
       const content = document.getElementById(contentId);
       const arrow = document.getElementById(arrowId);
@@ -689,7 +688,6 @@
       arrow.innerText = isOpen ? '▼' : '▲';
     }
 
-    /* INSERTAR CAMPO DE FIRMA INTERACTIVO */
     function insertSignatureField() {
       const signatureHTML = `
         <div class="signature-container" contenteditable="false">
@@ -875,7 +873,6 @@
       saveData();
     }
 
-    /* EXPORTACIÓN PDF CON CAMPOS DE FORMULARIO/FIRMA INTERACTIVOS */
     function exportToPDF() {
       document.getElementById('exportMenu').classList.remove('show');
       const element = document.getElementById('editor');
@@ -906,13 +903,10 @@
         filename:     `${title.toLowerCase().replace(/\s+/g, '_') || 'meow_docs'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' opacity: 1 }
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
       };
 
-      // Mantiene activos los inputs HTML como campos rellenables en el PDF generado
-      html2pdf().set(opt).from(container).toPdf().get('jspdf').then(function (pdf) {
-        // Habilita renderizado de formularios interactivos PDF
-      }).save();
+      html2pdf().set(opt).from(container).save();
     }
 
     function exportToWord() {
