@@ -276,13 +276,14 @@
       color: var(--placeholder);
     }
 
-    /* ESTILO CAMPO DE FIRMA INTERACTIVO */
+    /* ESTILO REFORZADO DEL CAMPO DE FIRMA */
     .signature-container {
-      display: inline-block;
-      margin: 20px 0;
+      display: block;
+      margin: 24px 0 12px 0;
       border-top: 2px solid var(--border);
       padding-top: 8px;
       width: 260px;
+      user-select: none;
     }
 
     .signature-input {
@@ -352,7 +353,6 @@
       color: var(--hover-text);
     }
 
-    /* BOTÓN ACORDEÓN PRINCIPAL */
     .drawer-accordion-btn {
       width: 100%;
       background: transparent;
@@ -377,7 +377,6 @@
       color: var(--hover-text);
     }
 
-    /* CONTENEDOR DESPLEGABLE */
     .drawer-dropdown-content {
       display: none;
       flex-direction: column;
@@ -429,7 +428,6 @@
       text-transform: uppercase;
     }
 
-    /* BARRA INFERIOR COMPACTA */
     .bottom-grid {
       border-top: var(--border-thick) solid var(--border);
       display: flex;
@@ -688,14 +686,16 @@
       arrow.innerText = isOpen ? '▼' : '▲';
     }
 
+    /* INSERCIÓN MEJORADA Y DIRECTA DEL CAMPO DE FIRMA */
     function insertSignatureField() {
+      const editor = document.getElementById('editor');
       const signatureHTML = `
         <div class="signature-container" contenteditable="false">
-          <input type="text" class="signature-input" placeholder="Haz clic para firmar en PDF..." />
+          <input type="text" class="signature-input" placeholder="Haz clic para firmar..." />
           <span class="signature-label">Firma Autorizada</span>
-        </div>&nbsp;
+        </div>
       `;
-      document.execCommand('insertHTML', false, signatureHTML);
+      editor.insertAdjacentHTML('beforeend', signatureHTML);
       toggleDrawer();
       saveData();
     }
